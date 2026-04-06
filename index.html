@@ -137,33 +137,56 @@ nav{
 
 /* ── HERO ─────────────────────────────────── */
 .hero{
-  position:relative;min-height:100vh;display:flex;align-items:center;
-  padding:140px 56px 80px;
-  background:linear-gradient(160deg,#050810 0%,#080c18 55%,#050810 100%);
-  overflow:hidden;
+  position:relative;min-height:100vh;
+  display:grid;grid-template-columns:52% 48%;
+  background:#050810;overflow:hidden;
 }
-.hero-content{position:relative;z-index:2;max-width:700px}
+.hero-left{
+  position:relative;z-index:2;
+  padding:160px 64px 80px 80px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.hero-right{position:relative;overflow:hidden}
+.hero-portrait{
+  width:100%;height:100%;object-fit:cover;object-position:center 15%;
+  will-change:transform;
+}
+.hero-portrait-grad{
+  position:absolute;inset:0;
+  background:linear-gradient(90deg,#050810 0%,rgba(5,8,16,.55) 35%,transparent 60%);
+}
+.hero-portrait-vignette{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(5,8,16,.65) 0%,transparent 45%);
+}
+.hero-portrait-badge{
+  position:absolute;bottom:36px;right:32px;
+  padding:18px 24px;border-radius:16px;
+}
+.hpb-stars{color:var(--gold);font-size:.8rem;letter-spacing:3px;margin-bottom:4px}
+.hpb-text{font-size:.82rem;font-weight:600;color:var(--white)}
+.hpb-sub{font-size:.64rem;color:var(--muted);margin-top:2px;font-weight:300}
 .hero-eyebrow{
-  display:inline-flex;align-items:center;gap:14px;margin-bottom:32px;
-  font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);font-weight:500;
+  display:inline-flex;align-items:center;gap:14px;margin-bottom:24px;
+  font-size:.58rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);font-weight:500;
   opacity:0;
 }
-.hero-eyebrow::before{content:'';width:30px;height:1px;background:var(--gold)}
+.hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--gold)}
 .hero-h1{
   font-family:'Cormorant Garamond',serif;
-  font-size:clamp(3.4rem,7vw,6.4rem);line-height:1.03;font-weight:300;
-  letter-spacing:-.02em;margin-bottom:28px;color:var(--white);
+  font-size:clamp(4.2rem,8.5vw,8rem);line-height:.98;font-weight:300;
+  letter-spacing:-.03em;margin-bottom:32px;color:var(--white);
 }
-.hero-h1 strong{font-weight:600}
-.hero-h1 em{font-style:italic;color:var(--gold)}
+.hero-h1 em{font-style:italic;color:var(--gold);display:block}
+.hero-h1 strong{font-weight:600;display:block}
 /* SplitText wrappers */
 .hero-h1 .char-wrap{overflow:hidden;display:inline-block;vertical-align:bottom}
 .hero-h1 .char{display:inline-block;will-change:transform}
 .hero-sub{
-  font-size:1rem;line-height:1.9;color:var(--muted);
-  margin-bottom:52px;max-width:480px;font-weight:300;opacity:0;
+  font-size:.95rem;line-height:1.95;color:var(--muted);
+  margin-bottom:44px;max-width:420px;font-weight:300;opacity:0;
 }
-.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:72px;opacity:0}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:56px;opacity:0}
 .btn-gold{
   position:relative;display:inline-flex;align-items:center;gap:10px;
   padding:16px 32px;background:var(--gold);color:var(--bg);
@@ -185,34 +208,71 @@ nav{
 }
 .btn-outline:hover{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.05)}
 .hero-stats{display:flex;gap:0;opacity:0}
-.hero-stat{padding:0 36px 0 0;border-right:1px solid var(--line)}
+.hero-stat{padding:0 32px 0 0;border-right:1px solid var(--line)}
 .hero-stat:first-child{padding-left:0}
 .hero-stat:last-child{border-right:none}
-.hstat-n{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:600;color:var(--gold);line-height:1;display:block}
-.hstat-l{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:6px;display:block;font-weight:400}
-.hero-visual{position:absolute;right:0;top:0;bottom:0;width:44%;z-index:1;overflow:hidden}
-.hero-img{width:100%;height:100%;object-fit:cover;object-position:center top;opacity:.35;filter:grayscale(15%);will-change:transform}
-.hero-visual-grad{position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 0%,rgba(5,8,16,.65) 40%,transparent 72%)}
+.hstat-n{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;color:var(--gold);line-height:1;display:block}
+.hstat-l{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:6px;display:block;font-weight:400}
 .hero-scroll{
-  position:absolute;bottom:36px;left:56px;z-index:2;
+  position:absolute;bottom:36px;left:80px;z-index:2;
   display:flex;align-items:center;gap:14px;
   font-size:.57rem;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);opacity:0;
 }
 .scroll-line{width:1px;height:44px;background:linear-gradient(to bottom,var(--gold),transparent);animation:spulse 2.2s ease-in-out infinite}
 @keyframes spulse{0%,100%{opacity:.35}50%{opacity:1}}
 
-/* ── MARQUEE ──────────────────────────────── */
-.marquee-section{
-  padding:0;background:var(--bg2);border-top:1px solid var(--line);
-  border-bottom:1px solid var(--line);overflow:hidden;
+/* ── PORTFOLIO CAROUSEL ───────────────────── */
+.portfolio{padding:100px 0 80px;background:var(--bg2);overflow:hidden}
+.portfolio-header{padding:0 80px;max-width:1200px;margin:0 auto 56px;display:flex;align-items:flex-end;justify-content:space-between}
+.car-nav{display:flex;gap:12px}
+.car-btn{
+  width:48px;height:48px;border-radius:50%;border:1px solid var(--line);
+  background:var(--faint);color:var(--white);font-size:1rem;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:all .25s;
 }
-.marquee-inner{display:flex;align-items:center;height:54px;white-space:nowrap;overflow:hidden}
-.marquee-track{
-  display:inline-flex;gap:48px;align-items:center;
-  font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;
-  color:var(--muted);font-weight:500;will-change:transform;
+.car-btn:hover{border-color:rgba(201,162,39,.5);background:rgba(201,162,39,.08);color:var(--gold)}
+.carousel-viewport{overflow:hidden;padding:4px 0}
+.carousel-track{
+  display:flex;gap:24px;padding:0 80px 28px;
+  will-change:transform;
 }
-.marquee-track .dot{color:var(--gold);font-size:.5rem}
+.por-card{
+  flex-shrink:0;width:320px;border-radius:var(--r);overflow:hidden;
+  border:1px solid var(--line);background:var(--faint);
+  transition:border-color .3s,transform .35s;
+}
+.por-card:hover{border-color:rgba(201,162,39,.3);transform:translateY(-5px)}
+.por-img-wrap{position:relative;height:210px;overflow:hidden}
+.por-img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.por-card:hover .por-img{transform:scale(1.06)}
+.por-badge{
+  position:absolute;top:14px;left:14px;
+  padding:6px 14px;border-radius:60px;
+  font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+}
+.por-badge.sold{background:rgba(201,162,39,.2);border:1px solid rgba(201,162,39,.4);color:var(--gold)}
+.por-badge.rented{background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.3);color:#4ade80}
+.por-badge.active{background:rgba(100,160,255,.15);border:1px solid rgba(100,160,255,.3);color:#93c5fd}
+.por-days{
+  position:absolute;bottom:14px;right:14px;
+  background:rgba(5,8,16,.82);backdrop-filter:blur(10px);
+  border:1px solid var(--line);border-radius:8px;
+  padding:6px 12px;font-size:.65rem;color:var(--white);font-weight:500;
+}
+.por-body{padding:24px 24px 20px}
+.por-type{font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:500}
+.por-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin-bottom:4px;line-height:1.2}
+.por-loc{font-size:.75rem;color:var(--muted);font-weight:300}
+.por-foot{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.por-price{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--gold)}
+.por-size{font-size:.72rem;color:var(--muted)}
+.carousel-dots{display:flex;justify-content:center;gap:8px;margin-top:24px;padding:0 80px}
+.car-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--line);
+  border:1px solid rgba(255,255,255,.12);transition:all .3s;cursor:pointer;
+}
+.car-dot.active{width:24px;border-radius:4px;background:var(--gold);border-color:var(--gold)}
 
 /* ── STATS STRIP ──────────────────────────── */
 .stats-strip{position:relative;padding:0 56px;background:var(--bg);border-bottom:1px solid var(--line);overflow:hidden}
@@ -494,10 +554,18 @@ footer{
   nav{padding:0 20px;width:calc(100% - 24px);top:10px}
   .nav-links,.nav-cta{display:none}
   .nav-ham{display:flex}
-  .hero{padding:100px 24px 80px}
-  .hero-visual{width:50%;opacity:.2}
-  .hero-stats{flex-wrap:wrap;gap:24px}
+  .hero{grid-template-columns:1fr;min-height:auto}
+  .hero-left{padding:120px 28px 60px;order:2}
+  .hero-right{order:1;height:55vw;min-height:240px}
+  .hero-portrait-grad{background:linear-gradient(to bottom,transparent 40%,#050810 100%)}
+  .hero-portrait-badge{display:none}
+  .hero-scroll{display:none}
+  .hero-stats{flex-wrap:wrap;gap:20px}
   .hero-stat{border-right:none;padding:0}
+  .portfolio{padding:60px 0 48px}
+  .portfolio-header{padding:0 24px;flex-direction:column;align-items:flex-start;gap:20px}
+  .carousel-track{padding:0 24px 20px}
+  .carousel-dots{padding:0 24px}
   .leistungen{padding:80px 24px}
   .leis-grid{grid-template-columns:1fr}
   .objekte-header{padding:80px 24px 40px;flex-direction:column;align-items:flex-start;gap:16px}
@@ -566,70 +634,179 @@ footer{
 
   <!-- ═══ HERO ═══ -->
   <section class="hero" id="hero">
-    <div class="orbs">
-      <div class="orb orb-gold o1"></div>
-      <div class="orb orb-blue o2"></div>
-      <div class="orb orb-rose o3"></div>
-    </div>
-    <div class="hero-content">
-      <div class="hero-eyebrow" id="heroEyebrow">
-        Ihr Immobilienmakler · Zwickau
+    <!-- Left: Content -->
+    <div class="hero-left">
+      <div class="orbs" style="z-index:0">
+        <div class="orb orb-gold o1" style="opacity:.7"></div>
+        <div class="orb orb-blue o2" style="opacity:.5"></div>
       </div>
-      <h1 class="hero-h1" id="heroH1">
-        Immobilien<br><strong>mit</strong> <em>Herz</em><br><strong>und Verstand.</strong>
-      </h1>
+      <div class="hero-eyebrow" id="heroEyebrow">
+        Immobilienmakler · Zwickau
+      </div>
+      <h1 class="hero-h1" id="heroH1"><em>Lukas</em><strong>Schiwig.</strong></h1>
       <p class="hero-sub" id="heroSub">
-        Persönliche Beratung. Schnelle Abwicklung. Digitale Vermarktung,
-        die Ihre Immobilie ins beste Licht rückt — von der Bewertung bis
-        zur Schlüsselübergabe.
+        Manche kennen Zwickau.<br>
+        Ich kenne die richtigen Menschen.
       </p>
       <div class="hero-btns" id="heroBtns">
         <a href="#kontakt" class="btn-gold magnetic">Kostenlose Bewertung</a>
-        <a href="#objekte" class="btn-outline magnetic">Aktuelle Objekte</a>
+        <a href="#portfolio" class="btn-outline magnetic">Referenzen</a>
       </div>
       <div class="hero-stats" id="heroStats">
         <div class="hero-stat">
-          <span class="hstat-n">4,6<span style="font-size:1.2rem">★</span></span>
+          <span class="hstat-n">4,6<span style="font-size:1rem">★</span></span>
           <span class="hstat-l">Google Bewertung</span>
         </div>
-        <div class="hero-stat" style="padding-left:36px">
+        <div class="hero-stat" style="padding-left:28px">
           <span class="hstat-n">37</span>
           <span class="hstat-l">Bewertungen</span>
         </div>
-        <div class="hero-stat" style="padding-left:36px">
-          <span class="hstat-n">100<span style="font-size:1.2rem">%</span></span>
-          <span class="hstat-l">Digitale Vermarktung</span>
+        <div class="hero-stat" style="padding-left:28px">
+          <span class="hstat-n">100<span style="font-size:1rem">%</span></span>
+          <span class="hstat-l">Digital</span>
         </div>
       </div>
+      <div class="hero-scroll" id="heroScroll">
+        <div class="scroll-line"></div>
+        Scroll
+      </div>
     </div>
-    <div class="hero-visual">
-      <img class="hero-img" id="heroImg"
-        src="https://images.pexels.com/photos/1643384/pexels-photo-1643384.jpeg?auto=compress&cs=tinysrgb&w=1200"
-        alt="Immobilien Zwickau">
-      <div class="hero-visual-grad"></div>
-    </div>
-    <div class="hero-scroll" id="heroScroll">
-      <div class="scroll-line"></div>
-      Scroll
+
+    <!-- Right: Portrait -->
+    <div class="hero-right">
+      <img class="hero-portrait" id="heroImg"
+        src="https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=900"
+        alt="Lukas Schiwig – Immobilienmakler Zwickau">
+      <div class="hero-portrait-grad"></div>
+      <div class="hero-portrait-vignette"></div>
+      <div class="hero-portrait-badge glass">
+        <div class="hpb-stars">★★★★★</div>
+        <div class="hpb-text">Lukas Schiwig</div>
+        <div class="hpb-sub">Zwickau · Lichtentanne · Sachsen</div>
+      </div>
     </div>
   </section>
 
-  <!-- ═══ MARQUEE ═══ -->
-  <div class="marquee-section">
-    <div class="marquee-inner">
-      <div class="marquee-track" id="marqueeTrack">
-        <span>Kaufen</span><span class="dot">◆</span>
-        <span>Verkaufen</span><span class="dot">◆</span>
-        <span>Vermieten</span><span class="dot">◆</span>
-        <span>Bewertung</span><span class="dot">◆</span>
-        <span>Zwickau</span><span class="dot">◆</span>
-        <span>Lichtentanne</span><span class="dot">◆</span>
-        <span>Sachsen</span><span class="dot">◆</span>
-        <span>Beratung</span><span class="dot">◆</span>
-        <span>Schnell &amp; Persönlich</span><span class="dot">◆</span>
+  <!-- ═══ PORTFOLIO CAROUSEL ═══ -->
+  <section class="portfolio" id="portfolio">
+    <div class="portfolio-header">
+      <div>
+        <div class="section-eyebrow rv">Referenzen</div>
+        <h2 class="section-h2 rv" style="margin-bottom:0">Jedes Objekt eine <em>Erfolgsgeschichte.</em></h2>
+      </div>
+      <div class="car-nav rv">
+        <button class="car-btn" id="carPrev" aria-label="Zurück">←</button>
+        <button class="car-btn" id="carNext" aria-label="Weiter">→</button>
       </div>
     </div>
-  </div>
+    <div class="carousel-viewport">
+      <div class="carousel-track" id="carTrack">
+
+        <div class="por-card">
+          <div class="por-img-wrap">
+            <img class="por-img" src="https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Einfamilienhaus verkauft" loading="lazy">
+            <span class="por-badge sold">✓ Verkauft</span>
+            <span class="por-days">in 11 Tagen</span>
+          </div>
+          <div class="por-body">
+            <div class="por-type">Einfamilienhaus</div>
+            <div class="por-title">Freistehendes EFH</div>
+            <div class="por-loc">📍 Zwickau-Marienthal</div>
+            <div class="por-foot">
+              <div class="por-price">148.000 €</div>
+              <div class="por-size">145 m²</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="por-card">
+          <div class="por-img-wrap">
+            <img class="por-img" src="https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Wohnung vermietet" loading="lazy">
+            <span class="por-badge rented">✓ Vermietet</span>
+            <span class="por-days">in 5 Tagen</span>
+          </div>
+          <div class="por-body">
+            <div class="por-type">Eigentumswohnung</div>
+            <div class="por-title">3-Zimmer-Wohnung</div>
+            <div class="por-loc">📍 Zwickau, Innenstadt</div>
+            <div class="por-foot">
+              <div class="por-price">420 €/Mo</div>
+              <div class="por-size">76 m²</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="por-card">
+          <div class="por-img-wrap">
+            <img class="por-img" src="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Mehrfamilienhaus verkauft" loading="lazy">
+            <span class="por-badge sold">✓ Verkauft</span>
+            <span class="por-days">in 18 Tagen</span>
+          </div>
+          <div class="por-body">
+            <div class="por-type">Mehrfamilienhaus</div>
+            <div class="por-title">MFH mit 4 Einheiten</div>
+            <div class="por-loc">📍 Lichtentanne</div>
+            <div class="por-foot">
+              <div class="por-price">210.000 €</div>
+              <div class="por-size">290 m²</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="por-card">
+          <div class="por-img-wrap">
+            <img class="por-img" src="https://images.pexels.com/photos/2121121/pexels-photo-2121121.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Penthouse vermietet" loading="lazy">
+            <span class="por-badge rented">✓ Vermietet</span>
+            <span class="por-days">in 3 Tagen</span>
+          </div>
+          <div class="por-body">
+            <div class="por-type">Penthouse</div>
+            <div class="por-title">Dachgeschoss-Wohnung</div>
+            <div class="por-loc">📍 Zwickau-Eckersbach</div>
+            <div class="por-foot">
+              <div class="por-price">590 €/Mo</div>
+              <div class="por-size">112 m²</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="por-card">
+          <div class="por-img-wrap">
+            <img class="por-img" src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Haus verkauft" loading="lazy">
+            <span class="por-badge sold">✓ Verkauft</span>
+            <span class="por-days">in 9 Tagen</span>
+          </div>
+          <div class="por-body">
+            <div class="por-type">Einfamilienhaus</div>
+            <div class="por-title">Haus mit Garten</div>
+            <div class="por-loc">📍 Werdau</div>
+            <div class="por-foot">
+              <div class="por-price">165.000 €</div>
+              <div class="por-size">160 m²</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="por-card">
+          <div class="por-img-wrap">
+            <img class="por-img" src="https://images.pexels.com/photos/1571463/pexels-photo-1571463.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Wohnung aktiv" loading="lazy">
+            <span class="por-badge active">● Aktiv</span>
+          </div>
+          <div class="por-body">
+            <div class="por-type">Eigentumswohnung</div>
+            <div class="por-title">4-Zimmer-Wohnung</div>
+            <div class="por-loc">📍 Zwickau-Planitz</div>
+            <div class="por-foot">
+              <div class="por-price">460 €/Mo</div>
+              <div class="por-size">94 m²</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="carousel-dots" id="carDots"></div>
+  </section>
 
   <!-- ═══ STATS ═══ -->
   <section class="stats-strip">
@@ -1170,9 +1347,9 @@ function initPage() {
   gsap.from('#heroStats', { opacity: 0, y: 20, duration: 0.8, delay: 1.35, ease: 'power3.out', clearProps: 'all' });
   gsap.from('#heroScroll',{ opacity: 0,        duration: 0.8, delay: 1.9,  ease: 'power2.out', clearProps: 'all' });
 
-  // Hero image parallax
+  // Hero portrait parallax
   gsap.to('#heroImg', {
-    yPercent: -20,
+    yPercent: -12,
     ease: 'none',
     scrollTrigger: {
       trigger: '.hero',
@@ -1182,11 +1359,69 @@ function initPage() {
     }
   });
 
-  // ── MARQUEE ───────────────────────────
-  const mtrack = document.getElementById('marqueeTrack');
-  mtrack.innerHTML += mtrack.innerHTML;
-  const mw = mtrack.scrollWidth / 2;
-  gsap.to(mtrack, { x: -mw, duration: 22, ease: 'none', repeat: -1 });
+  // Hero portrait entrance
+  gsap.from('#heroImg', { scale: 1.1, duration: 2.0, ease: 'power3.out', delay: 0.1 });
+
+  // ── PORTFOLIO CAROUSEL ────────────────
+  const carTrack  = document.getElementById('carTrack');
+  const carDots   = document.getElementById('carDots');
+  const carPrev   = document.getElementById('carPrev');
+  const carNext   = document.getElementById('carNext');
+  if (carTrack) {
+    const cards = Array.from(carTrack.querySelectorAll('.por-card'));
+    const cardW = () => cards[0].offsetWidth + 24; // width + gap
+    let cur = 0;
+
+    // Build dots
+    cards.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'car-dot' + (i === 0 ? ' active' : '');
+      d.addEventListener('click', () => goTo(i));
+      carDots.appendChild(d);
+    });
+
+    function updateDots() {
+      carDots.querySelectorAll('.car-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === cur);
+      });
+    }
+
+    function goTo(idx) {
+      cur = Math.max(0, Math.min(idx, cards.length - 1));
+      gsap.to(carTrack, { x: -(cur * cardW()), duration: 0.7, ease: 'power3.out' });
+      updateDots();
+    }
+
+    carNext.addEventListener('click', () => goTo(cur + 1));
+    carPrev.addEventListener('click', () => goTo(cur - 1));
+
+    // Auto-advance
+    let autoTimer = setInterval(() => goTo(cur + 1 < cards.length ? cur + 1 : 0), 4000);
+    carTrack.addEventListener('mouseenter', () => clearInterval(autoTimer));
+    carTrack.addEventListener('mouseleave', () => {
+      autoTimer = setInterval(() => goTo(cur + 1 < cards.length ? cur + 1 : 0), 4000);
+    });
+
+    // Drag support
+    let startX = 0, isDragging = false;
+    carTrack.addEventListener('mousedown', e => { startX = e.clientX; isDragging = true; });
+    window.addEventListener('mouseup', e => {
+      if (!isDragging) return;
+      isDragging = false;
+      const diff = startX - e.clientX;
+      if (Math.abs(diff) > 50) goTo(diff > 0 ? cur + 1 : cur - 1);
+    });
+    carTrack.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+    carTrack.addEventListener('touchend', e => {
+      const diff = startX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) goTo(diff > 0 ? cur + 1 : cur - 1);
+    });
+
+    // Refresh on resize
+    window.addEventListener('resize', () => {
+      gsap.set(carTrack, { x: -(cur * cardW()) });
+    });
+  }
 
   // ── SCROLL REVEALS (.rv) ──────────────
   ScrollTrigger.batch('.rv', {
