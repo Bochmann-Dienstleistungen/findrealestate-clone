@@ -11,91 +11,45 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <style>
-/* ── ROOT ─────────────────────────────────── */
 :root{
   --bg:#ffffff;--bg2:#f4f7fd;--bg3:#e9eff9;
   --glass:rgba(255,255,255,.78);
   --glass-b:rgba(10,25,65,.12);--glass-top:rgba(255,255,255,.95);
   --gold:#1a3f8f;--gold2:#2a56c6;--gold3:#4a7ed4;
   --gold-glow:rgba(26,63,143,.1);
+  --dark:#060e22;
   --white:#0a1a3c;--muted:rgba(10,26,60,.5);--faint:rgba(26,63,143,.05);
   --line:rgba(10,26,60,.1);--r:14px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:auto}
-body{background:var(--bg);color:var(--white);font-family:'Inter',sans-serif;line-height:1.6;overflow-x:hidden}
-.page-wrap{overflow-x:hidden;position:relative}
+html,body{height:100%;overflow:hidden;background:var(--dark)}
+body{color:var(--white);font-family:'Inter',sans-serif;line-height:1.6}
 a{color:inherit;text-decoration:none}
 img{display:block;max-width:100%;height:auto}
-section{position:relative}
 
-/* ── LOADER ───────────────────────────────── */
-#loader{
-  position:fixed;inset:0;z-index:9999;background:#060e22;
-  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;
-}
-.loader-logo{
-  font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,6vw,4rem);
-  font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--white);
-  overflow:hidden;
-}
-.loader-logo span{color:var(--gold)}
-.loader-sub{
-  font-size:.58rem;letter-spacing:.55em;text-transform:uppercase;
-  color:rgba(26,63,143,.6);font-weight:500;margin-top:-12px;
-}
-.loader-track{
-  width:220px;height:1px;background:rgba(26,63,143,.15);position:relative;overflow:hidden;margin-top:8px;
-}
+/* ── LOADER ───────────────────────────── */
+#loader{position:fixed;inset:0;z-index:9999;background:var(--dark);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px}
+.ll{display:inline-block;font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,7vw,5rem);font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#fff}
+.ll.accent{color:var(--gold2)}
+.loader-sub{font-size:.58rem;letter-spacing:.55em;text-transform:uppercase;color:rgba(255,255,255,.35);font-weight:500}
+.loader-track{width:220px;height:1px;background:rgba(255,255,255,.1);position:relative;overflow:hidden;margin-top:8px}
 #loader-fill{position:absolute;inset:0;width:0;background:linear-gradient(90deg,var(--gold),var(--gold2))}
-.loader-pct{
-  font-size:.6rem;letter-spacing:.2em;color:rgba(255,255,255,.3);margin-top:4px;
-}
+.loader-pct{font-size:.6rem;letter-spacing:.2em;color:rgba(255,255,255,.25);margin-top:4px}
 
-/* ── SCROLL PROGRESS ─────────────────────── */
-#progress{
-  position:fixed;top:0;left:0;right:0;height:2px;z-index:2000;
-  background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold3));
-  transform-origin:left;transform:scaleX(0);
-}
+/* ── SLIDE WRAP ───────────────────────── */
+#slide-wrap{position:fixed;inset:0;will-change:transform}
+.slide{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden}
+.slide.scrollable{overflow-y:auto;overflow-x:hidden}
+.slide.scrollable::-webkit-scrollbar{width:4px}
+.slide.scrollable::-webkit-scrollbar-thumb{background:rgba(26,63,143,.2);border-radius:4px}
 
+/* ── GLASS ────────────────────────────── */
+.glass{background:linear-gradient(135deg,rgba(255,255,255,.88) 0%,rgba(255,255,255,.72) 100%);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border:1px solid var(--glass-b);border-top:1px solid var(--glass-top);box-shadow:0 8px 40px rgba(10,26,60,.09),inset 0 1px 0 rgba(255,255,255,.95)}
 
-/* ── LIQUID GLASS ─────────────────────────── */
-.glass{
-  background:linear-gradient(135deg,rgba(255,255,255,.88) 0%,rgba(255,255,255,.72) 100%);
-  backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);
-  border:1px solid var(--glass-b);border-top:1px solid var(--glass-top);
-  box-shadow:0 8px 40px rgba(10,26,60,.09),inset 0 1px 0 rgba(255,255,255,.95);
-}
-.glass-dark{
-  background:linear-gradient(135deg,rgba(6,14,38,.84) 0%,rgba(6,14,38,.68) 100%);
-  backdrop-filter:blur(32px) saturate(130%);-webkit-backdrop-filter:blur(32px) saturate(130%);
-  border:1px solid rgba(255,255,255,.12);border-top:1px solid rgba(255,255,255,.2);
-  box-shadow:0 32px 64px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.1);
-}
-
-/* ── ORBS ──────────────────────────────────── */
-.orbs{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
-.orb{position:absolute;border-radius:50%;filter:blur(90px)}
-.orb-gold{width:700px;height:700px;background:radial-gradient(circle,rgba(26,63,143,.1),transparent 65%)}
-.orb-blue{width:500px;height:500px;background:radial-gradient(circle,rgba(66,120,220,.1),transparent 65%)}
-.orb-rose{width:380px;height:380px;background:radial-gradient(circle,rgba(100,160,255,.08),transparent 65%)}
-@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(60px,-40px) scale(1.08)}66%{transform:translate(-30px,50px) scale(.95)}}
-@keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-50px,60px) scale(1.06)}66%{transform:translate(40px,-30px) scale(.97)}}
-@keyframes drift3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,40px) scale(1.1)}}
-.o1{top:-15%;right:-10%;animation:drift1 14s ease-in-out infinite}
-.o2{bottom:-10%;left:-8%;animation:drift2 10s ease-in-out infinite}
-.o3{top:35%;left:35%;animation:drift3 12s ease-in-out infinite}
-
-/* ── NAV ──────────────────────────────────── */
-nav{
-  position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:500;
-  width:calc(100% - 48px);max-width:1200px;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;height:62px;border-radius:var(--r);will-change:transform;
-}
+/* ── NAV ──────────────────────────────── */
+nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:500;width:calc(100% - 48px);max-width:1200px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:62px;border-radius:var(--r);will-change:transform;opacity:0}
 .nav-logo{display:flex;flex-direction:column;gap:1px;line-height:1}
 .nav-logo-name{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;letter-spacing:.1em;color:var(--white)}
 .nav-logo-name span{color:var(--gold)}
@@ -103,145 +57,99 @@ nav{
 .nav-links{display:flex;gap:28px;list-style:none}
 .nav-links a{font-size:.68rem;font-weight:500;letter-spacing:.09em;color:var(--muted);transition:color .2s;text-transform:uppercase}
 .nav-links a:hover{color:var(--gold)}
-.nav-cta{
-  padding:10px 22px;border:1px solid rgba(26,63,143,.35);border-radius:60px;
-  color:var(--gold);font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
-  transition:all .25s;white-space:nowrap;
-}
+.nav-cta{padding:10px 22px;border:1px solid rgba(26,63,143,.35);border-radius:60px;color:var(--gold);font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:all .25s;white-space:nowrap}
 .nav-cta:hover{background:var(--gold);color:#fff}
 .nav-ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none}
 .nav-ham span{display:block;width:22px;height:1.5px;background:var(--white);transition:.3s}
-/* Nav logo accent keeps a warm touch on the clean nav */
-.nav-logo-name span{color:var(--gold)}
-.nav-mob{
-  display:none;position:fixed;inset:0;z-index:490;
-  background:rgba(255,255,255,.97);backdrop-filter:blur(32px);
-  padding:110px 40px 40px;flex-direction:column;gap:0;
-}
+.nav-mob{display:none;position:fixed;inset:0;z-index:490;background:rgba(255,255,255,.97);backdrop-filter:blur(32px);padding:110px 40px 40px;flex-direction:column;gap:0}
 .nav-mob.open{display:flex}
-.nav-mob a{
-  font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:400;
-  color:var(--white);border-bottom:1px solid var(--line);padding:20px 0;
-  transition:color .2s;display:block;
-}
+.nav-mob a{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:400;color:var(--white);border-bottom:1px solid var(--line);padding:20px 0;transition:color .2s;display:block}
 .nav-mob a:hover{color:var(--gold)}
 
-/* ── HERO BENTO ───────────────────────────── */
-.hero-bento{
-  background:#060e22;height:100vh;
-  display:flex;flex-direction:column;
-  padding:84px 20px 20px;
-}
-.hbento{
-  flex:1;min-height:0;
-  display:grid;
-  grid-template-columns:1.05fr 1.75fr 1.05fr 0.95fr;
-  grid-template-rows:1fr 210px;
-  gap:10px;
-  max-width:1440px;width:100%;margin:0 auto;
-}
-.hbc{
-  border-radius:18px;overflow:hidden;position:relative;
-  background:#0c1a36;
-  will-change:clip-path,transform,opacity;
-}
-/* Portrait — tall, col 1, rows 1+2 */
+/* ── SIDE DOTS ────────────────────────── */
+#side-dots{position:fixed;right:24px;top:50%;transform:translateY(-50%);z-index:400;display:flex;flex-direction:column;gap:10px;opacity:0}
+.sd{width:6px;height:6px;border-radius:50%;background:rgba(10,26,60,.2);border:1px solid rgba(10,26,60,.1);cursor:pointer;transition:all .35s}
+.sd.active{width:4px;height:24px;border-radius:3px;background:var(--gold)}
+.sd-dark{background:rgba(255,255,255,.25);border-color:rgba(255,255,255,.2)}
+.sd-dark.active{background:#fff}
+
+/* ── PANEL COUNTER ────────────────────── */
+#panel-counter{position:fixed;left:28px;bottom:32px;z-index:400;opacity:0;display:flex;align-items:baseline;gap:6px}
+.pc-current{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:rgba(255,255,255,.7);line-height:1}
+.pc-sep{width:28px;height:1px;background:rgba(255,255,255,.25);margin:0 4px;display:inline-block;vertical-align:middle}
+.pc-total{font-size:.6rem;letter-spacing:.2em;color:rgba(255,255,255,.3);font-weight:400}
+.pc-dark .pc-current{color:rgba(10,26,60,.4)}
+.pc-dark .pc-sep{background:rgba(10,26,60,.15)}
+.pc-dark .pc-total{color:rgba(10,26,60,.25)}
+
+/* ── SWIPE HINT ───────────────────────── */
+.swipe-hint{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:10;pointer-events:none}
+.swipe-line{width:1px;height:40px;background:linear-gradient(to bottom,rgba(255,255,255,.5),transparent);animation:sh 2s ease-in-out infinite}
+.swipe-txt{font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.35)}
+@keyframes sh{0%,100%{opacity:.3;transform:translateY(-6px)}50%{opacity:.9;transform:translateY(0)}}
+
+/* ── BTN ──────────────────────────────── */
+.btn-gold{position:relative;display:inline-flex;align-items:center;gap:10px;padding:16px 32px;background:var(--gold);color:#fff;font-size:.73rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-radius:60px;transition:box-shadow .3s,background .3s;border:1px solid var(--gold);overflow:hidden}
+.btn-gold::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);transform:translateX(-100%);transition:transform .55s}
+.btn-gold:hover::before{transform:translateX(100%)}
+.btn-gold:hover{background:var(--gold2);box-shadow:0 0 40px rgba(26,63,143,.35)}
+.btn-outline{display:inline-flex;align-items:center;gap:10px;padding:16px 32px;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.82);font-size:.73rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;border-radius:60px;transition:all .3s}
+.btn-outline:hover{border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.07)}
+.btn-outline-dark{display:inline-flex;align-items:center;gap:10px;padding:16px 32px;border:1px solid rgba(26,63,143,.3);color:var(--gold);font-size:.73rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;border-radius:60px;transition:all .3s}
+.btn-outline-dark:hover{border-color:var(--gold);background:rgba(26,63,143,.06)}
+
+/* ── ORBS ─────────────────────────────── */
+.orbs{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.orb{position:absolute;border-radius:50%;filter:blur(90px)}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(60px,-40px) scale(1.08)}66%{transform:translate(-30px,50px) scale(.95)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-50px,60px) scale(1.06)}66%{transform:translate(40px,-30px) scale(.97)}}
+
+/* ═══════════════════════════════════════ */
+/* PANEL 0 — REVEAL                        */
+/* ═══════════════════════════════════════ */
+#slide-reveal{background:var(--dark);display:flex;align-items:center;justify-content:center;flex-direction:column}
+.reveal-logo{font-family:'Cormorant Garamond',serif;font-size:clamp(4rem,10vw,8rem);font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#fff;overflow:hidden;display:flex;gap:0}
+.rl{display:inline-block;opacity:0;transform:translateY(60px)}
+.rl.accent{color:var(--gold2)}
+.reveal-sub{font-size:.6rem;letter-spacing:.6em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-top:16px;opacity:0}
+.reveal-line{width:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:32px auto}
+
+/* ═══════════════════════════════════════ */
+/* PANEL 1 — HERO BENTO                    */
+/* ═══════════════════════════════════════ */
+#slide-hero{background:var(--dark)}
+.hero-bento{height:100%;display:flex;flex-direction:column;padding:84px 20px 20px}
+.hbento{flex:1;min-height:0;display:grid;grid-template-columns:1.05fr 1.75fr 1.05fr 0.95fr;grid-template-rows:1fr 210px;gap:10px;max-width:1440px;width:100%;margin:0 auto}
+.hbc{border-radius:18px;overflow:hidden;position:relative;background:#0c1a36;will-change:clip-path,transform,opacity}
 .hbc-portrait{grid-column:1;grid-row:1/span 2}
 .hbc-portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 15%}
 .hbc-portrait-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,14,38,.85) 0%,rgba(6,14,38,.1) 45%)}
-.hbc-portrait-badge{
-  position:absolute;bottom:18px;left:18px;right:18px;
-  background:rgba(255,255,255,.1);backdrop-filter:blur(18px);
-  border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:14px 18px;
-}
+.hbc-portrait-badge{position:absolute;bottom:18px;left:18px;right:18px;background:rgba(255,255,255,.1);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:14px 18px}
 .hbc-name{font-size:.85rem;font-weight:600;color:#fff;letter-spacing:.01em}
 .hbc-role{font-size:.58rem;color:rgba(255,255,255,.5);margin-top:3px;letter-spacing:.14em;text-transform:uppercase}
-/* Main image — wide, col 2+3, row 1 */
 .hbc-mainimg{grid-column:2/span 2;grid-row:1}
-.hbc-mainimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hbc-mainimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:center;will-change:transform}
 .hbc-mainimg .hbc-grad{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(6,14,38,.55))}
-.hbc-tag{
-  position:absolute;top:18px;left:18px;
-  background:rgba(255,255,255,.12);backdrop-filter:blur(12px);
-  border:1px solid rgba(255,255,255,.2);border-radius:60px;
-  padding:7px 16px;font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.82);font-weight:500;
-}
-/* Rating — col 4, row 1 */
-.hbc-rating{
-  grid-column:4;grid-row:1;
-  background:var(--gold);
-  padding:26px 24px;
-  display:flex;flex-direction:column;justify-content:space-between;
-}
+.hbc-tag{position:absolute;top:18px;left:18px;background:rgba(255,255,255,.12);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.2);border-radius:60px;padding:7px 16px;font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.82);font-weight:500}
+.hbc-rating{grid-column:4;grid-row:1;background:var(--gold);padding:26px 24px;display:flex;flex-direction:column;justify-content:space-between}
 .hbc-stars{font-size:.85rem;letter-spacing:3px;color:rgba(255,255,255,.65)}
 .hbc-score{font-family:'Cormorant Garamond',serif;font-size:clamp(3.5rem,5vw,5.5rem);font-weight:600;color:#fff;line-height:1}
 .hbc-score-lbl{font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:2px}
 .hbc-score-sub{font-size:.7rem;color:rgba(255,255,255,.5);line-height:1.5;margin-top:10px;font-weight:300}
-/* Headline — col 2, row 2 */
-.hbc-headline{
-  grid-column:2;grid-row:2;
-  padding:24px 28px;
-  display:flex;flex-direction:column;justify-content:center;
-}
-.hbc-h1{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(1.45rem,2.6vw,2.6rem);font-weight:300;
-  line-height:1.1;color:#fff;
-}
+.hbc-headline{grid-column:2;grid-row:2;padding:24px 28px;display:flex;flex-direction:column;justify-content:center}
+.hbc-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(1.45rem,2.6vw,2.6rem);font-weight:300;line-height:1.1;color:#fff}
 .hbc-h1 em{font-style:italic;color:#b8d0ff}
-/* CTA — col 3, row 2 */
-.hbc-cta{
-  grid-column:3;grid-row:2;
-  padding:24px 28px;
-  display:flex;flex-direction:column;justify-content:space-between;
-}
+.hbc-cta{grid-column:3;grid-row:2;padding:24px 28px;display:flex;flex-direction:column;justify-content:space-between}
 .hbc-sub{font-size:.78rem;color:rgba(255,255,255,.48);line-height:1.75;font-weight:300}
-.hbc-btn{
-  display:inline-flex;align-items:center;gap:10px;
-  padding:11px 22px;border-radius:60px;
-  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);
-  color:rgba(255,255,255,.88);font-size:.65rem;font-weight:600;
-  letter-spacing:.12em;text-transform:uppercase;transition:all .3s;width:fit-content;
-}
+.hbc-btn{display:inline-flex;align-items:center;gap:10px;padding:11px 22px;border-radius:60px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);color:rgba(255,255,255,.88);font-size:.65rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;transition:all .3s;width:fit-content}
 .hbc-btn:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4)}
-/* Location — col 4, row 2 */
-.hbc-loc{
-  grid-column:4;grid-row:2;
-  padding:22px 22px;
-  display:flex;flex-direction:column;justify-content:space-between;
-}
+.hbc-loc{grid-column:4;grid-row:2;padding:22px 22px;display:flex;flex-direction:column;justify-content:space-between}
 .hbc-loc-eyebrow{font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.35)}
-.hbc-loc-city{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(1.4rem,2vw,2rem);font-weight:300;color:#fff;line-height:1;
-}
+.hbc-loc-city{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,2vw,2rem);font-weight:300;color:#fff;line-height:1}
 .hbc-loc-sub{font-size:.62rem;color:rgba(255,255,255,.35);font-weight:300;margin-top:4px}
-.hbc-scroll-hint{
-  display:flex;align-items:center;gap:8px;
-  font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.28);
-}
+.hbc-scroll-hint{display:flex;align-items:center;gap:8px;font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.28)}
 .hbc-scroll-line{width:1px;height:32px;background:linear-gradient(to bottom,rgba(255,255,255,.4),transparent);animation:spulse 2.2s ease-in-out infinite}
 @keyframes spulse{0%,100%{opacity:.3}50%{opacity:.9}}
-
-/* Shared btn-gold / btn-outline (used elsewhere) */
-.btn-gold{
-  position:relative;display:inline-flex;align-items:center;gap:10px;
-  padding:16px 32px;background:var(--gold);color:#fff;
-  font-size:.73rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-  border-radius:60px;transition:box-shadow .3s,background .3s;border:1px solid var(--gold);overflow:hidden;
-}
-.btn-gold::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);transform:translateX(-100%);transition:transform .55s}
-.btn-gold:hover::before{transform:translateX(100%)}
-.btn-gold:hover{background:var(--gold2);box-shadow:0 0 40px rgba(26,63,143,.35)}
-.btn-outline{
-  display:inline-flex;align-items:center;gap:10px;
-  padding:16px 32px;border:1px solid rgba(255,255,255,.2);
-  color:rgba(255,255,255,.82);font-size:.73rem;font-weight:500;
-  letter-spacing:.1em;text-transform:uppercase;border-radius:60px;transition:all .3s;
-}
-.btn-outline:hover{border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.07)}
-
-/* Hero bento responsive */
 @media(max-width:1024px){
   .hbento{grid-template-columns:1fr 1fr 1fr;grid-template-rows:48vw 160px}
   .hbc-portrait{grid-column:1;grid-row:1/span 2}
@@ -251,690 +159,199 @@ nav{
   .hbc-cta,.hbc-loc{display:none}
 }
 @media(max-width:768px){
-  .hero-bento{padding:80px 14px 14px;height:auto;min-height:100svh}
-  .hbento{grid-template-columns:1fr 1fr;grid-template-rows:56vw 130px 130px}
-  .hbc-portrait{grid-column:1;grid-row:1/span 3}
+  .hero-bento{padding:80px 14px 14px}
+  .hbento{grid-template-columns:1fr 1fr;grid-template-rows:52vw 130px}
+  .hbc-portrait{grid-column:1;grid-row:1/span 2}
   .hbc-mainimg{grid-column:2;grid-row:1}
   .hbc-rating{grid-column:2;grid-row:2}
-  .hbc-headline{grid-column:2;grid-row:3}
-  .hbc-cta,.hbc-loc{display:none}
-  .hbc-h1{font-size:1.15rem}
+  .hbc-headline,.hbc-cta,.hbc-loc{display:none}
 }
 
-/* ── PORTFOLIO CAROUSEL ───────────────────── */
-.portfolio{padding:100px 0 80px;background:var(--bg2);overflow:hidden}
-.portfolio-header{padding:0 80px;max-width:1200px;margin:0 auto 56px;display:flex;align-items:flex-end;justify-content:space-between}
-.car-nav{display:flex;gap:12px}
-.car-btn{
-  width:48px;height:48px;border-radius:50%;border:1px solid var(--line);
-  background:var(--faint);color:var(--white);font-size:1rem;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;
-  transition:all .25s;
-}
-.car-btn:hover{border-color:rgba(26,63,143,.5);background:rgba(26,63,143,.08);color:var(--gold)}
-.carousel-viewport{overflow:hidden;padding:4px 0}
-.carousel-track{
-  display:flex;gap:24px;padding:0 80px 28px;
-  will-change:transform;
-}
-.por-card{
-  flex-shrink:0;width:320px;border-radius:var(--r);overflow:hidden;
-  border:1px solid var(--line);background:var(--faint);
-  transition:border-color .3s,transform .35s;
-}
-.por-card:hover{border-color:rgba(26,63,143,.3);transform:translateY(-5px)}
-.por-img-wrap{position:relative;height:210px;overflow:hidden}
-.por-img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
-.por-card:hover .por-img{transform:scale(1.06)}
-.por-badge{
-  position:absolute;top:14px;left:14px;
-  padding:6px 14px;border-radius:60px;
-  font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
-}
-.por-badge.sold{background:rgba(26,63,143,.2);border:1px solid rgba(26,63,143,.4);color:var(--gold)}
-.por-badge.rented{background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.3);color:#4ade80}
-.por-badge.active{background:rgba(100,160,255,.15);border:1px solid rgba(100,160,255,.3);color:#93c5fd}
-.por-days{
-  position:absolute;bottom:14px;right:14px;
-  background:rgba(255,255,255,.88);backdrop-filter:blur(10px);
-  border:1px solid rgba(10,26,60,.15);border-radius:8px;
-  padding:6px 12px;font-size:.65rem;color:var(--white);font-weight:600;
-}
-.por-body{padding:24px 24px 20px}
-.por-type{font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:500}
-.por-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin-bottom:4px;line-height:1.2}
-.por-loc{font-size:.75rem;color:var(--muted);font-weight:300}
-.por-foot{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
-.por-price{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--gold)}
-.por-size{font-size:.72rem;color:var(--muted)}
-.carousel-dots{display:flex;justify-content:center;gap:8px;margin-top:24px;padding:0 80px}
-.car-dot{
-  width:6px;height:6px;border-radius:50%;background:var(--line);
-  border:1px solid rgba(255,255,255,.12);transition:all .3s;cursor:pointer;
-}
-.car-dot.active{width:24px;border-radius:4px;background:var(--gold);border-color:var(--gold)}
-
-/* ── STATS STRIP ──────────────────────────── */
-.stats-strip{position:relative;padding:0 56px;background:var(--bg);border-bottom:1px solid var(--line);overflow:hidden}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);max-width:1200px;margin:0 auto}
-.stat-cell{
-  padding:52px 24px;text-align:center;border-right:1px solid var(--line);
-  position:relative;overflow:hidden;
-}
-.stat-cell:last-child{border-right:none}
-.stat-cell::after{
-  content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%) scaleX(0);
-  width:60%;height:1px;background:var(--gold);transition:transform .4s;
-}
-.stat-cell:hover::after{transform:translateX(-50%) scaleX(1)}
-.stat-n{
-  font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,4vw,3.6rem);
-  font-weight:600;color:var(--gold);line-height:1;display:block;
-}
-.stat-suffix{font-size:1.6rem;vertical-align:super;margin-left:2px}
-.stat-l{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:10px;display:block;font-weight:400}
-
-/* ── LEISTUNGEN ───────────────────────────── */
-.leistungen{padding:120px 56px;background:var(--bg2)}
-.section-eyebrow{
-  display:inline-flex;align-items:center;gap:14px;
-  font-size:.6rem;letter-spacing:.32em;text-transform:uppercase;
-  color:var(--gold);font-weight:500;margin-bottom:20px;
-}
+/* ═══════════════════════════════════════ */
+/* PANEL 2 — LUKAS TEASER                  */
+/* ═══════════════════════════════════════ */
+#slide-lukas{background:var(--bg);display:flex;align-items:center;padding:100px 56px}
+.lukas-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;width:100%}
+.lukas-portrait-wrap{position:relative;height:68vh;max-height:620px;border-radius:20px;overflow:hidden}
+.lukas-portrait-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
+.lukas-portrait-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(6,14,38,.3),transparent 60%)}
+.lukas-text{display:flex;flex-direction:column;gap:20px}
+.section-eyebrow{display:inline-flex;align-items:center;gap:14px;font-size:.6rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);font-weight:500}
 .section-eyebrow::before{content:'';width:30px;height:1px;background:var(--gold)}
-.section-h2{
-  font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,4.5vw,4rem);
-  font-weight:300;line-height:1.1;letter-spacing:-.01em;margin-bottom:16px;
-}
+.section-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,3.6vw,3.4rem);font-weight:300;line-height:1.1;letter-spacing:-.01em;color:var(--white)}
 .section-h2 em{font-style:italic;color:var(--gold)}
-.section-sub{font-size:.95rem;color:var(--muted);max-width:480px;line-height:1.9;margin-bottom:64px;font-weight:300}
-.leis-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1200px;margin:0 auto}
-.leis-card{
-  padding:44px 32px;border-radius:var(--r);position:relative;overflow:hidden;
-  border:1px solid var(--line);background:var(--faint);
-  transition:border-color .3s,transform .3s;
+.lukas-pills{display:flex;flex-wrap:wrap;gap:10px}
+.fact-pill{padding:8px 18px;border-radius:60px;border:1px solid rgba(26,63,143,.2);background:rgba(26,63,143,.05);font-size:.65rem;font-weight:500;color:var(--gold);letter-spacing:.06em}
+.lukas-p{font-size:.88rem;color:var(--muted);line-height:1.9;font-weight:300}
+.lukas-link{font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);display:inline-flex;align-items:center;gap:8px;border-bottom:1px solid rgba(26,63,143,.25);padding-bottom:2px;width:fit-content;transition:border-color .2s}
+.lukas-link:hover{border-color:var(--gold)}
+.lukas-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+.lukas-stat{padding:20px;border-radius:14px;border:1px solid var(--line);background:var(--bg2);text-align:center}
+.lukas-stat-val{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--gold);line-height:1;display:block}
+.lukas-stat-lbl{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:5px;line-height:1.4;display:block}
+.lukas-btns{display:flex;gap:14px;flex-wrap:wrap}
+@media(max-width:900px){
+  #slide-lukas{padding:80px 32px}
+  .lukas-inner{grid-template-columns:1fr;gap:36px}
+  .lukas-portrait-wrap{height:50vw;max-height:360px}
 }
-.leis-card:hover{border-color:rgba(26,63,143,.3);transform:translateY(-6px)}
-.leis-icon{
-  width:52px;height:52px;border-radius:14px;
-  background:linear-gradient(135deg,rgba(26,63,143,.15),rgba(26,63,143,.05));
-  border:1px solid rgba(26,63,143,.2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.4rem;margin-bottom:28px;
-}
-.leis-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:500;margin-bottom:12px}
-.leis-text{font-size:.85rem;color:var(--muted);line-height:1.85;font-weight:300}
-.leis-card::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
-  transform:scaleX(0);transition:transform .4s;
-}
-.leis-card:hover::after{transform:scaleX(1)}
-
-/* ── OBJEKTE (horizontal scroll) ───────────── */
-.objekte-wrap{overflow:hidden;background:var(--bg)}
-.objekte-header{padding:120px 56px 60px;max-width:1200px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between}
-.objekte-header .section-sub{margin-bottom:0}
-.objekte-link{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:600;border-bottom:1px solid rgba(26,63,143,.3);padding-bottom:2px;white-space:nowrap}
-#listings-track{display:flex;gap:24px;padding:0 56px 100px;width:max-content}
-.listing-card{
-  flex-shrink:0;width:360px;border-radius:var(--r);overflow:hidden;
-  border:1px solid var(--line);background:var(--faint);
-  transition:border-color .3s;position:relative;
-}
-.listing-card:hover{border-color:rgba(26,63,143,.3)}
-.listing-img-wrap{position:relative;height:240px;overflow:hidden}
-.listing-img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
-.listing-card:hover .listing-img{transform:scale(1.06)}
-.listing-tag{
-  position:absolute;top:16px;left:16px;
-  background:rgba(255,255,255,.88);backdrop-filter:blur(12px);
-  border:1px solid rgba(10,26,60,.15);border-radius:60px;
-  font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--white);padding:6px 14px;font-weight:500;
-}
-.listing-tag.gold{background:rgba(26,63,143,.2);border-color:rgba(26,63,143,.4);color:var(--gold)}
-.listing-body{padding:28px 28px 24px}
-.listing-price{
-  font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;
-  color:var(--gold);line-height:1;margin-bottom:8px;
-}
-.listing-price small{font-size:.85rem;font-weight:300;color:var(--muted)}
-.listing-title{font-size:.95rem;font-weight:500;margin-bottom:6px}
-.listing-loc{font-size:.78rem;color:var(--muted);font-weight:300;margin-bottom:20px}
-.listing-meta{display:flex;gap:18px;border-top:1px solid var(--line);padding-top:18px}
-.lm{font-size:.7rem;color:var(--muted);display:flex;align-items:center;gap:5px}
-.lm strong{color:var(--white);font-weight:500}
-.listing-placeholder{
-  flex-shrink:0;width:360px;border-radius:var(--r);overflow:hidden;
-  border:1px dashed rgba(26,63,143,.2);background:linear-gradient(135deg,rgba(26,63,143,.03),transparent);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  min-height:380px;gap:16px;padding:40px;
-}
-.listing-placeholder .ph-icon{font-size:2.4rem;opacity:.4}
-.listing-placeholder p{font-size:.82rem;color:var(--muted);text-align:center;line-height:1.7;font-weight:300}
-.listing-placeholder a{
-  margin-top:8px;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--gold);border-bottom:1px solid rgba(26,63,143,.3);padding-bottom:2px;
+@media(max-width:768px){
+  #slide-lukas{padding:80px 20px;overflow-y:auto}
+  .lukas-inner{gap:28px}
 }
 
-/* ── ÜBER LUKAS (pinned) ──────────────────── */
-.about{background:var(--bg2);overflow:hidden}
-.about-inner{display:flex;align-items:stretch;max-width:100%;min-height:100vh}
-.about-img-col{
-  position:sticky;top:0;width:45%;height:100vh;flex-shrink:0;overflow:hidden;
-}
-.about-img-wrap{width:100%;height:100%;position:relative}
-.about-img{width:100%;height:100%;object-fit:cover;object-position:center top}
-.about-img-cover{position:absolute;inset:0;background:var(--bg2);transform-origin:bottom}
-.about-img-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(6,14,38,.65))}
-.about-img-badge{
-  position:absolute;bottom:40px;left:40px;
-  padding:20px 28px;border-radius:16px;
-}
-.about-badge-stars{color:var(--gold);font-size:1rem;letter-spacing:2px;margin-bottom:4px}
-.about-badge-text{font-size:.75rem;color:var(--white);font-weight:500}
-.about-badge-sub{font-size:.65rem;color:var(--muted);font-weight:300;margin-top:2px}
-.about-text-col{flex:1;padding:120px 80px 120px 72px;display:flex;flex-direction:column;justify-content:center;gap:80px}
-.about-panel{}
-.about-panel-num{
-  font-family:'Cormorant Garamond',serif;font-size:4.5rem;font-weight:300;
-  color:rgba(26,63,143,.12);line-height:1;margin-bottom:-16px;display:block;
-}
-.about-panel-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:500;margin-bottom:16px;line-height:1.15}
-.about-panel-title em{font-style:italic;color:var(--gold)}
-.about-panel-text{font-size:.92rem;color:var(--muted);line-height:2;font-weight:300;max-width:480px}
-.about-tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
-.about-tag{
-  padding:8px 18px;border-radius:60px;border:1px solid var(--line);
-  font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500;
+/* ═══════════════════════════════════════ */
+/* PANEL 3 — PORTFOLIO TEASER              */
+/* ═══════════════════════════════════════ */
+#slide-portfolio{background:var(--bg2);display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+.port-header{padding:0 56px 40px;max-width:1200px;width:100%;display:flex;justify-content:space-between;align-items:flex-end}
+.port-link{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);display:inline-flex;align-items:center;gap:8px;border-bottom:1px solid rgba(26,63,143,.25);padding-bottom:2px;white-space:nowrap;transition:border-color .2s}
+.port-link:hover{border-color:var(--gold)}
+
+/* Infinite card track */
+.inf-track-wrap{overflow:hidden;cursor:grab;padding-bottom:4px;padding-left:56px}
+.inf-track-wrap:active{cursor:grabbing}
+.inf-track{display:flex;gap:22px;width:max-content;will-change:transform}
+.por-card{flex-shrink:0;width:280px;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:var(--bg);transition:transform .3s,border-color .3s;user-select:none}
+.por-card:hover{transform:translateY(-6px);border-color:rgba(26,63,143,.3)}
+.por-img-wrap{position:relative;height:180px;overflow:hidden}
+.por-img{width:100%;height:100%;object-fit:cover;transition:transform .6s;pointer-events:none}
+.por-card:hover .por-img{transform:scale(1.06)}
+.por-badge{position:absolute;top:12px;left:12px;padding:5px 12px;border-radius:60px;font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.por-badge.sold{background:rgba(26,63,143,.2);border:1px solid rgba(26,63,143,.4);color:var(--gold)}
+.por-badge.rented{background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.3);color:#16a34a}
+.por-badge.active{background:rgba(100,160,255,.15);border:1px solid rgba(100,160,255,.3);color:#2563eb}
+.por-days{position:absolute;bottom:12px;right:12px;background:rgba(255,255,255,.88);backdrop-filter:blur(10px);border:1px solid rgba(10,26,60,.15);border-radius:8px;padding:4px 9px;font-size:.58rem;color:var(--white);font-weight:600}
+.por-body{padding:18px 18px 16px}
+.por-type{font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:500}
+.por-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:500;margin-bottom:2px;line-height:1.2;color:var(--white)}
+.por-loc{font-size:.7rem;color:var(--muted);font-weight:300}
+.por-foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.por-price{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--gold)}
+.por-size{font-size:.68rem;color:var(--muted)}
+@media(max-width:768px){
+  .port-header{padding:0 20px 28px;flex-direction:column;align-items:flex-start;gap:12px}
+  .inf-track-wrap{padding-left:20px}
 }
 
-/* ── WARUM ────────────────────────────────── */
-.warum{padding:120px 56px;background:var(--bg)}
-.warum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1200px;margin:0 auto}
-.warum-card{
-  padding:40px 36px;border-radius:var(--r);border:1px solid var(--line);
-  background:var(--faint);position:relative;overflow:hidden;
+/* ═══════════════════════════════════════ */
+/* PANEL 4 — WERTRECHNER                   */
+/* ═══════════════════════════════════════ */
+#slide-rechner{background:var(--bg3);display:flex;flex-direction:column;justify-content:center;padding:80px 56px;overflow:hidden}
+.rechner-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start;width:100%}
+.rechner-title{margin-bottom:28px}
+.rcl-types{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
+.rcl-pill{padding:10px 22px;border-radius:60px;border:1px solid var(--line);background:rgba(255,255,255,.6);font-size:.72rem;letter-spacing:.06em;color:var(--muted);cursor:pointer;transition:all .3s;font-weight:500}
+.rcl-pill.active,.rcl-pill:hover{border-color:var(--gold);background:rgba(26,63,143,.1);color:var(--gold)}
+.rcl-label{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:8px;display:block;margin-top:20px}
+.rcl-slider{-webkit-appearance:none;width:100%;height:2px;background:var(--line);border-radius:2px;outline:none;cursor:pointer}
+.rcl-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid #fff;box-shadow:0 0 14px rgba(26,63,143,.35);transition:transform .2s}
+.rcl-slider::-webkit-slider-thumb:hover{transform:scale(1.2)}
+.rcl-readout{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:500;color:var(--white);margin-top:8px;display:block}
+.rcl-years{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.rcl-year{padding:10px 6px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.6);font-size:.68rem;text-align:center;cursor:pointer;transition:all .3s;color:var(--muted);font-weight:500}
+.rcl-year.active{border-color:var(--gold);background:rgba(26,63,143,.1);color:var(--gold)}
+.rcl-conditions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+.rcl-cond{padding:12px 8px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.6);font-size:.68rem;text-align:center;cursor:pointer;transition:all .3s;color:var(--muted);font-weight:500;line-height:1.4}
+.rcl-cond.active{border-color:var(--gold);background:rgba(26,63,143,.1);color:var(--gold)}
+.rechner-result{padding:40px 36px;border-radius:var(--r);text-align:center}
+.rr-eyebrow{font-size:.54rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;display:block}
+.rr-value{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,3.8vw,3.6rem);font-weight:500;color:var(--gold);line-height:1;margin-bottom:6px}
+.rr-range{font-size:.8rem;color:var(--muted);font-weight:300;margin-bottom:24px}
+.rr-divider{width:40px;height:1px;background:var(--gold);margin:20px auto;opacity:.4}
+.rr-note{font-size:.7rem;color:var(--muted);font-weight:300;line-height:1.8;margin-bottom:24px}
+.rr-cta{display:block;width:100%}
+@media(max-width:900px){
+  #slide-rechner{padding:80px 32px}
+  .rechner-inner{grid-template-columns:1fr;gap:40px}
 }
-.warum-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(26,63,143,.4),transparent);
-  transform:scaleX(0);transition:transform .5s;
+@media(max-width:768px){
+  #slide-rechner{padding:80px 20px;overflow-y:auto}
 }
-.warum-card:hover::before{transform:scaleX(1)}
-.wcard-num{font-family:'Cormorant Garamond',serif;font-size:3.6rem;font-weight:300;color:rgba(26,63,143,.1);line-height:1;margin-bottom:-8px}
-.wcard-title{font-size:1.05rem;font-weight:600;margin-bottom:12px;letter-spacing:.01em}
-.wcard-text{font-size:.83rem;color:var(--muted);line-height:1.85;font-weight:300}
 
-/* ── TESTIMONIALS ─────────────────────────── */
-.testi{padding:100px 0;background:var(--bg2);border-top:1px solid var(--line);overflow:hidden}
-.testi-header{padding:0 56px;margin-bottom:52px;max-width:1200px;margin-left:auto;margin-right:auto}
-.testi-track-wrap{overflow:hidden;white-space:nowrap}
-.testi-track{display:inline-flex;gap:24px;will-change:transform}
-.testi-card{
-  flex-shrink:0;width:380px;padding:36px 36px 32px;border-radius:var(--r);
-  border:1px solid var(--line);background:var(--faint);
-  white-space:normal;display:inline-block;vertical-align:top;
-}
-.testi-stars{color:var(--gold);font-size:.85rem;letter-spacing:3px;margin-bottom:16px}
-.testi-text{font-size:.88rem;color:var(--muted);line-height:1.9;font-weight:300;font-style:italic;margin-bottom:20px}
-.testi-author{font-size:.72rem;font-weight:600;letter-spacing:.08em;color:var(--white)}
-.testi-date{font-size:.65rem;color:var(--muted);margin-top:2px;font-weight:300}
-
-/* ── CTA SECTION ──────────────────────────── */
-.cta-section{
-  position:relative;padding:160px 56px;overflow:hidden;
-  background:linear-gradient(135deg,#060e22 0%,#0a1838 50%,#060e22 100%);
-  text-align:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-  color:#fff;
-}
-.cta-section .section-eyebrow{color:rgba(255,255,255,.55)}
-.cta-section .section-eyebrow::before{background:rgba(255,255,255,.4)}
-.cta-section .cta-sub{color:rgba(255,255,255,.6)}
-.cta-section .cta-h2{color:#fff}
-.cta-section .cta-h2 em{color:#a8c0ff}
-.cta-gold-line{
-  width:1px;height:80px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);
-  margin:0 auto 48px;
-}
-.cta-h2{
-  font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,5.5vw,5rem);
-  font-weight:300;line-height:1.1;margin-bottom:28px;
-}
-.cta-h2 em{font-style:italic;color:var(--gold)}
-.cta-sub{font-size:1rem;color:var(--muted);max-width:520px;margin:0 auto 52px;line-height:1.9;font-weight:300}
-.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-
-/* ── KONTAKT ──────────────────────────────── */
-.kontakt{padding:120px 56px;background:var(--bg2)}
-.kontakt-inner{display:grid;grid-template-columns:1fr 1fr;gap:72px;max-width:1200px;margin:0 auto;align-items:start}
-.kontakt-info{}
-.kontakt-info .section-h2{margin-bottom:24px}
-.kontakt-info .section-sub{margin-bottom:40px}
-.kinfo-item{display:flex;align-items:flex-start;gap:18px;margin-bottom:28px}
-.kinfo-icon{
-  width:46px;height:46px;border-radius:12px;flex-shrink:0;
-  border:1px solid rgba(26,63,143,.2);background:rgba(26,63,143,.06);
-  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
-}
-.kinfo-label{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:3px}
-.kinfo-val{font-size:.95rem;font-weight:400}
+/* ═══════════════════════════════════════ */
+/* PANEL 5 — KONTAKT                       */
+/* ═══════════════════════════════════════ */
+#slide-kontakt{background:var(--bg2);display:flex;flex-direction:column;justify-content:center;padding:80px 56px;overflow:hidden}
+.kontakt-inner{display:grid;grid-template-columns:1fr 1fr;gap:72px;max-width:1200px;margin:0 auto;align-items:start;width:100%}
+.section-sub{font-size:.88rem;color:var(--muted);max-width:480px;line-height:1.9;margin-bottom:32px;font-weight:300}
+.kinfo-item{display:flex;align-items:flex-start;gap:18px;margin-bottom:22px}
+.kinfo-icon{width:44px;height:44px;border-radius:12px;flex-shrink:0;border:1px solid rgba(26,63,143,.2);background:rgba(26,63,143,.06);display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.kinfo-label{font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:2px}
+.kinfo-val{font-size:.9rem;font-weight:400;color:var(--white)}
 .kinfo-val a:hover{color:var(--gold)}
-.kontakt-form{}
-.form-group{margin-bottom:18px}
-.form-group label{display:block;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:8px}
-.form-group input,
-.form-group textarea{
-  width:100%;padding:14px 18px;border-radius:12px;
-  border:1px solid var(--line);background:rgba(255,255,255,.9);
-  color:var(--white);font-family:'Inter',sans-serif;font-size:.9rem;
-  transition:border-color .25s,background .25s;outline:none;
-}
-.form-group input:focus,
-.form-group textarea:focus{border-color:rgba(26,63,143,.5);background:#fff;box-shadow:0 0 0 3px rgba(26,63,143,.08)}
-.form-group textarea{min-height:120px;resize:vertical}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.form-submit{
-  width:100%;padding:16px;border-radius:60px;
-  background:var(--gold);color:#fff;border:none;
-  font-family:'Inter',sans-serif;font-size:.73rem;font-weight:700;
-  letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
-  transition:background .3s,box-shadow .3s;margin-top:8px;
-}
-.form-submit:hover{background:var(--gold2);box-shadow:0 0 48px rgba(26,63,143,.35)}
-.form-note{font-size:.68rem;color:var(--muted);text-align:center;margin-top:12px;font-weight:300}
-
-/* ── FOOTER ───────────────────────────────── */
-footer{
-  padding:48px 56px;background:var(--bg);border-top:1px solid var(--line);
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:gap;
-}
-.foot-logo{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;letter-spacing:.1em}
+.kontakt-btns{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:7px}
+.form-group input,.form-group textarea{width:100%;padding:13px 16px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.9);color:var(--white);font-family:'Inter',sans-serif;font-size:.88rem;transition:border-color .25s;outline:none}
+.form-group input:focus,.form-group textarea:focus{border-color:rgba(26,63,143,.5);box-shadow:0 0 0 3px rgba(26,63,143,.07)}
+.form-group textarea{min-height:100px;resize:vertical}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-submit{width:100%;padding:15px;border-radius:60px;background:var(--gold);color:#fff;border:none;font-family:'Inter',sans-serif;font-size:.73rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:background .3s,box-shadow .3s;margin-top:6px}
+.form-submit:hover{background:var(--gold2);box-shadow:0 0 48px rgba(26,63,143,.3)}
+.form-note{font-size:.66rem;color:var(--muted);text-align:center;margin-top:10px;font-weight:300}
+.kontakt-footer{max-width:1200px;margin:32px auto 0;width:100%;display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid var(--line);flex-wrap:wrap;gap:16px}
+.foot-logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;letter-spacing:.1em;color:var(--white)}
 .foot-logo span{color:var(--gold)}
-.foot-copy{font-size:.7rem;color:var(--muted);font-weight:300;text-align:center}
-.foot-links{display:flex;gap:24px}
-.foot-links a{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:color .2s;font-weight:400}
+.foot-copy{font-size:.66rem;color:var(--muted);font-weight:300}
+.foot-links{display:flex;gap:20px}
+.foot-links a{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:color .2s}
 .foot-links a:hover{color:var(--gold)}
-
-/* ── WHATSAPP FLOAT ───────────────────────── */
-.wa-float{
-  position:fixed;bottom:28px;right:28px;z-index:800;
-  width:56px;height:56px;border-radius:50%;
-  background:#25d366;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 8px 32px rgba(37,211,102,.35);transition:transform .3s,box-shadow .3s;
-  animation:wapulse 3s ease-in-out infinite;
+@media(max-width:900px){
+  #slide-kontakt{padding:80px 32px}
+  .kontakt-inner{grid-template-columns:1fr}
 }
+@media(max-width:768px){
+  #slide-kontakt{padding:80px 20px;overflow-y:auto}
+  .form-grid{grid-template-columns:1fr}
+}
+
+/* ── WAAPP FLOAT ──────────────────────── */
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:800;width:56px;height:56px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(37,211,102,.35);transition:transform .3s,box-shadow .3s;animation:wapulse 3s ease-in-out infinite}
 .wa-float:hover{transform:scale(1.1);box-shadow:0 12px 40px rgba(37,211,102,.5);animation:none}
 @keyframes wapulse{0%,100%{box-shadow:0 8px 32px rgba(37,211,102,.35)}50%{box-shadow:0 8px 40px rgba(37,211,102,.55)}}
 .wa-float svg{width:28px;height:28px;fill:#fff}
 
-/* ── MOBILE STICKY BAR ────────────────────── */
-.mob-bar{
-  display:none;position:fixed;bottom:0;left:0;right:0;z-index:800;
-  padding:12px 20px 24px;
-  background:linear-gradient(to top,rgba(255,255,255,.97),rgba(255,255,255,.92));
-  backdrop-filter:blur(20px);border-top:1px solid var(--line);
-  gap:10px;
-}
-.mob-bar a{
-  flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
-  padding:14px;border-radius:14px;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
-}
+/* ── MOBILE BAR ───────────────────────── */
+.mob-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:800;padding:12px 20px 24px;background:linear-gradient(to top,rgba(255,255,255,.97),rgba(255,255,255,.92));backdrop-filter:blur(20px);border-top:1px solid var(--line);gap:10px}
+.mob-bar a{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:14px;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 .mob-bar .mob-call{background:var(--gold);color:#fff}
 .mob-bar .mob-wa{background:#25d366;color:#fff}
 
-/* ── BENTO GRIDS ──────────────────────────── */
-.bento-section{padding:72px 56px;background:var(--bg)}
-.bento-section+.bento-section{padding-top:0}
-
-.bento-grid{
-  max-width:1200px;margin:0 auto;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:14px;
-}
-/* BG1 row heights */
-.bg1{grid-template-rows:300px 188px}
-/* BG2 row heights */
-.bg2{grid-template-rows:260px 200px}
-
-.bc{
-  border-radius:20px;overflow:hidden;position:relative;
-  background:var(--bg2);border:1px solid var(--line);
-  transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s;
-}
-.bc:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(10,26,60,.1)}
-
-/* ── BG1 card positions ── */
-.bc-portrait{grid-column:1;grid-row:1/span 2}
-.bc-portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%}
-.bc-portrait-badge{
-  position:absolute;bottom:24px;left:24px;right:24px;
-  background:rgba(255,255,255,.9);backdrop-filter:blur(16px);
-  border-radius:12px;padding:14px 18px;border:1px solid rgba(255,255,255,.95);
-}
-.bc-pb-name{font-size:.82rem;font-weight:600;color:var(--white);letter-spacing:.02em}
-.bc-pb-sub{font-size:.62rem;color:var(--muted);margin-top:2px;font-weight:300}
-
-.bc-headline{
-  grid-column:2/span 2;grid-row:1;
-  padding:0 48px;background:var(--bg3);
-  display:flex;flex-direction:column;justify-content:center;gap:12px;
-}
-.bc-eyebrow{
-  font-size:.54rem;letter-spacing:.34em;text-transform:uppercase;
-  color:var(--gold);font-weight:500;
-  display:flex;align-items:center;gap:12px;
-}
-.bc-eyebrow::before{content:'';width:24px;height:1px;background:var(--gold)}
-.bc-h2{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(1.55rem,2.2vw,2.55rem);
-  font-weight:300;line-height:1.18;color:var(--white);
-}
-.bc-h2 em{font-style:italic;color:var(--gold)}
-
-.bc-trust{
-  grid-column:4;grid-row:1;
-  padding:32px 28px;
-  background:var(--gold);color:#fff;
-  display:flex;flex-direction:column;justify-content:space-between;
-}
-.bc-trust-stars{font-size:1rem;letter-spacing:3px;opacity:.85;margin-bottom:auto}
-.bc-trust-val{
-  font-family:'Cormorant Garamond',serif;
-  font-size:3.8rem;font-weight:600;line-height:1;color:#fff;
-}
-.bc-trust-lbl{font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;opacity:.7;margin-top:4px}
-.bc-trust-sub{font-size:.68rem;opacity:.65;line-height:1.5;margin-top:12px;font-weight:300}
-
-.bc-stat{
-  padding:26px 28px;
-  display:flex;flex-direction:column;justify-content:flex-end;
-}
-.bc-stat:nth-child(4){grid-column:2;grid-row:2}
-.bc-stat:nth-child(5){grid-column:3;grid-row:2}
-.bc-stat:nth-child(6){grid-column:4;grid-row:2}
-.bc-sn{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(2.4rem,3.5vw,3.6rem);font-weight:600;
-  color:var(--gold);line-height:1;display:block;margin-bottom:7px;
-}
-.bc-sn sup{font-size:1.2rem;vertical-align:super}
-.bc-sl{font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:400;line-height:1.5}
-
-/* ── BG2 card positions ── */
-.bc-svc-img{
-  grid-column:1/span 2;grid-row:1;
-  cursor:pointer;
-}
-.bc-svc-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.bc-svc-img .bc-grad{
-  position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(6,14,38,.82),rgba(6,14,38,.2) 55%,transparent);
-}
-.bc-svc-body{
-  position:absolute;bottom:0;left:0;right:0;padding:28px 32px;
-}
-.bc-svc-title{
-  font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:500;
-  color:#fff;line-height:1.1;margin-bottom:6px;
-}
-.bc-svc-text{font-size:.78rem;color:rgba(255,255,255,.65);line-height:1.6;font-weight:300}
-
-.bc-tall{
-  grid-column:3;grid-row:1/span 2;
-  background:var(--white);color:#fff;
-  padding:36px 32px;
-  display:flex;flex-direction:column;
-}
-.bc-tall .bc-icon{
-  width:50px;height:50px;border-radius:12px;
-  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
-  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
-  margin-bottom:auto;
-}
-.bc-tall .bc-svc-title{color:#fff;font-size:1.5rem;margin-top:auto;margin-bottom:8px}
-.bc-tall .bc-svc-text{color:rgba(255,255,255,.6)}
-.bc-tall .bc-link{
-  display:inline-flex;align-items:center;gap:10px;margin-top:28px;
-  font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;
-  color:rgba(255,255,255,.8);border-bottom:1px solid rgba(255,255,255,.25);
-  padding-bottom:3px;width:fit-content;transition:color .2s,border-color .2s;
-}
-.bc-tall .bc-link:hover{color:#fff;border-color:rgba(255,255,255,.6)}
-
-.bc-sm{
-  padding:28px 28px;
-  display:flex;flex-direction:column;justify-content:flex-end;
-}
-.bc-sm:nth-child(4){grid-column:4;grid-row:1}
-.bc-sm:nth-child(6){grid-column:4;grid-row:2}
-.bc-sm .bc-icon{
-  width:44px;height:44px;border-radius:11px;
-  background:rgba(26,63,143,.08);border:1px solid rgba(26,63,143,.14);
-  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
-  margin-bottom:auto;
-}
-.bc-sm .bc-svc-title{color:var(--white);font-size:1rem;font-weight:600;margin-bottom:4px;margin-top:auto}
-.bc-sm .bc-svc-text{font-size:.76rem;color:var(--muted);line-height:1.6;font-weight:300}
-
-.bc-cta{
-  grid-column:1/span 2;grid-row:2;
-  padding:32px 40px;
-  background:var(--gold);color:#fff;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  cursor:pointer;
-}
-.bc-cta-text{}
-.bc-cta-eyebrow{font-size:.54rem;letter-spacing:.3em;text-transform:uppercase;opacity:.7;margin-bottom:10px}
-.bc-cta-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;line-height:1.15}
-.bc-cta-arrow{
-  width:52px;height:52px;border-radius:50%;
-  border:1.5px solid rgba(255,255,255,.4);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.3rem;flex-shrink:0;
-  transition:background .25s,border-color .25s;
-}
-.bc-cta:hover .bc-cta-arrow{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.7)}
-
-/* responsive */
-@media(max-width:1024px){
-  .bento-section{padding:56px 32px}
-  .bg1{grid-template-rows:auto auto}
-  .bg2{grid-template-rows:auto auto}
-  .bento-grid{grid-template-columns:repeat(2,1fr)}
-  .bc-portrait{grid-column:1/span 2;grid-row:auto;min-height:320px}
-  .bc-headline{grid-column:1/span 2;padding:32px 32px;min-height:180px}
-  .bc-trust{grid-column:1}
-  .bc-stat:nth-child(4){grid-column:2;grid-row:auto}
-  .bc-stat:nth-child(5){grid-column:1;grid-row:auto}
-  .bc-stat:nth-child(6){grid-column:2;grid-row:auto}
-  .bc-svc-img{grid-column:1/span 2}
-  .bc-tall{grid-column:1/span 2;grid-row:auto;min-height:200px}
-  .bc-sm:nth-child(4),.bc-sm:nth-child(6){grid-column:auto}
-  .bc-cta{grid-column:1/span 2}
-}
-@media(max-width:768px){
-  .bento-section{padding:40px 20px}
-  .bento-section+.bento-section{padding-top:14px}
-  .bento-grid{grid-template-columns:1fr 1fr;gap:10px}
-  .bc-portrait{min-height:260px}
-  .bc-headline{padding:24px 22px}
-  .bc-h2{font-size:1.35rem}
-  .bc-trust{min-height:160px}
-  .bc-stat{padding:20px 18px}
-  .bc-svc-img{min-height:200px}
-  .bc-tall{min-height:220px}
-  .bc-cta{padding:24px 24px;flex-direction:column;align-items:flex-start;gap:16px}
-}
-
-/* ── RESPONSIVE ───────────────────────────── */
-@media(max-width:1024px){
-  .leis-grid{grid-template-columns:repeat(2,1fr)}
-  .warum-grid{grid-template-columns:repeat(2,1fr)}
-  .about-inner{flex-direction:column}
-  .about-img-col{position:relative;width:100%;height:60vw;flex-shrink:unset}
-  .about-text-col{padding:72px 40px}
-  .kontakt-inner{grid-template-columns:1fr}
-  .stats-grid{grid-template-columns:repeat(2,1fr)}
-  .stat-cell:nth-child(2){border-right:none}
-  .stat-cell:nth-child(1),.stat-cell:nth-child(2){border-bottom:1px solid var(--line)}
-}
-@media(max-width:768px){
-  nav{padding:0 20px;width:calc(100% - 24px);top:10px}
-  .nav-links,.nav-cta{display:none}
-  .nav-ham{display:flex}
-  .hero-seq{height:100svh}
-  .hseq-content{padding:0 28px}
-  .hseq-h1{font-size:clamp(3.2rem,14vw,5.5rem)}
-  .hseq-prog-wrap{left:28px;bottom:32px}
-  .hseq-scroll{right:28px;bottom:28px}
-  .hseq-stats{flex-wrap:wrap;gap:16px}
-  .hseq-stat{border-right:none;padding:0}
-  .portfolio{padding:60px 0 48px}
-  .portfolio-header{padding:0 24px;flex-direction:column;align-items:flex-start;gap:20px}
-  .carousel-track{padding:0 24px 20px}
-  .carousel-dots{padding:0 24px}
-  .leistungen{padding:80px 24px}
-  .leis-grid{grid-template-columns:1fr}
-  .objekte-header{padding:80px 24px 40px;flex-direction:column;align-items:flex-start;gap:16px}
-  #listings-track{padding:0 24px 80px}
-  .listing-card{width:300px}
-  .warum{padding:80px 24px}
-  .warum-grid{grid-template-columns:1fr}
-  .testi-header{padding:0 24px;margin-bottom:40px}
-  .cta-section{padding:100px 24px}
-  .kontakt{padding:80px 24px}
-  .stats-grid{grid-template-columns:repeat(2,1fr)}
-  footer{padding:36px 24px;flex-direction:column;gap:24px;text-align:center}
-  .foot-links{justify-content:center}
-  .wa-float{display:none}
-  .mob-bar{display:flex}
-  .about-text-col{padding:60px 24px}
-  .section-h2{font-size:2.2rem}
-}
-
-/* ── WERTRECHNER ──────────────────────────── */
-.rechner{padding:120px 56px;background:var(--bg3);border-top:1px solid var(--line)}
-.rechner-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
-.rcl-types{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0}
-.rcl-pill{
-  padding:10px 22px;border-radius:60px;border:1px solid var(--line);
-  background:var(--faint);font-size:.72rem;letter-spacing:.06em;
-  color:var(--muted);cursor:pointer;transition:all .3s;font-weight:500;
-}
-.rcl-pill.active,.rcl-pill:hover{border-color:var(--gold);background:rgba(26,63,143,.1);color:var(--gold)}
-.rcl-label{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:10px;display:block;margin-top:28px}
-.rcl-slider{
-  -webkit-appearance:none;width:100%;height:2px;
-  background:var(--line);border-radius:2px;outline:none;cursor:pointer;
-}
-.rcl-slider::-webkit-slider-thumb{
-  -webkit-appearance:none;width:20px;height:20px;border-radius:50%;
-  background:var(--gold);cursor:pointer;border:3px solid #fff;
-  box-shadow:0 0 14px rgba(26,63,143,.35);transition:transform .2s;
-}
-.rcl-slider::-webkit-slider-thumb:hover{transform:scale(1.2)}
-.rcl-readout{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:500;color:var(--white);margin-top:10px;display:block}
-.rcl-conditions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
-.rcl-cond{
-  padding:14px 10px;border-radius:12px;border:1px solid var(--line);
-  background:var(--faint);font-size:.7rem;text-align:center;cursor:pointer;
-  transition:all .3s;color:var(--muted);font-weight:500;line-height:1.4;
-}
-.rcl-cond.active{border-color:var(--gold);background:rgba(26,63,143,.1);color:var(--gold)}
-.rechner-result{
-  padding:44px 40px;border-radius:var(--r);text-align:center;
-  position:sticky;top:100px;
-}
-.rr-eyebrow{font-size:.56rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;display:block}
-.rr-value{
-  font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,4vw,3.8rem);
-  font-weight:500;color:var(--gold);line-height:1;margin-bottom:8px;
-}
-.rr-range{font-size:.82rem;color:var(--muted);font-weight:300;margin-bottom:28px}
-.rr-divider{width:40px;height:1px;background:var(--gold);margin:24px auto;opacity:.4}
-.rr-note{font-size:.72rem;color:rgba(242,232,216,.28);font-weight:300;line-height:1.8;margin-bottom:28px}
-.rr-cta{display:block;width:100%}
-
-/* ── FAQ ──────────────────────────────────── */
-.faq{padding:120px 56px;background:var(--bg2)}
-.faq-inner{max-width:820px;margin:0 auto}
-.faq-list{margin-top:60px}
-.faq-item{border-bottom:1px solid var(--line)}
-.faq-q{
-  width:100%;display:flex;align-items:center;justify-content:space-between;gap:20px;
-  padding:26px 0;background:none;border:none;color:var(--white);
-  font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;
-  text-align:left;cursor:pointer;transition:color .25s;
-}
-.faq-q:hover{color:var(--gold)}
-.faq-icon{
-  width:30px;height:30px;border-radius:50%;border:1px solid var(--line);
-  flex-shrink:0;display:flex;align-items:center;justify-content:center;
-  font-size:1.2rem;font-weight:300;color:var(--gold);
-  transition:border-color .3s,transform .4s;
-}
-.faq-item.open .faq-icon{border-color:var(--gold);transform:rotate(45deg)}
-.faq-a{height:0;overflow:hidden}
-.faq-a-inner{padding:0 0 28px;font-size:.9rem;color:var(--muted);line-height:2;font-weight:300;max-width:680px}
-.faq-a-inner strong{color:var(--white);font-weight:500}
-
-/* ── COOKIE BANNER ────────────────────────── */
-#cookieBanner{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
-  z-index:900;width:min(680px,calc(100% - 48px));
-  padding:22px 28px;border-radius:16px;
-  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
-}
+/* ── COOKIE BANNER ────────────────────── */
+#cookieBanner{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:900;width:min(680px,calc(100% - 48px));padding:22px 28px;border-radius:16px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;opacity:0;pointer-events:none}
+#cookieBanner.show{pointer-events:auto}
 .cookie-text{font-size:.78rem;color:var(--muted);line-height:1.7;flex:1;min-width:180px}
 .cookie-text a{color:var(--gold)}
 .cookie-text strong{color:var(--white);font-weight:600}
 .cookie-btns{display:flex;gap:10px;flex-shrink:0}
-.cookie-accept{
-  padding:10px 22px;border-radius:60px;background:var(--gold);
-  color:#fff;border:none;font-size:.68rem;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .25s;
-}
+.cookie-accept{padding:10px 22px;border-radius:60px;background:var(--gold);color:#fff;border:none;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .25s}
 .cookie-accept:hover{background:var(--gold2)}
-.cookie-decline{
-  padding:10px 20px;border-radius:60px;background:transparent;
-  color:var(--muted);border:1px solid var(--line);font-size:.68rem;
-  font-weight:500;cursor:pointer;transition:all .25s;
-}
-.cookie-decline:hover{border-color:var(--line);color:var(--white)}
+.cookie-decline{padding:10px 20px;border-radius:60px;background:transparent;color:var(--muted);border:1px solid var(--line);font-size:.68rem;font-weight:500;cursor:pointer;transition:all .25s}
+.cookie-decline:hover{color:var(--white)}
 
-/* ── MAPS ─────────────────────────────────── */
-.kontakt-map{
-  border-radius:var(--r);overflow:hidden;margin-top:28px;
-  border:1px solid var(--line);
-}
-.kontakt-map iframe{display:block;width:100%;height:260px;border:none;
-  filter:grayscale(80%) contrast(0.85) brightness(0.7);}
-
+/* ── RESPONSIVE NAV ───────────────────── */
 @media(max-width:768px){
-  .rechner{padding:80px 24px}
-  .rechner-inner{grid-template-columns:1fr;gap:40px}
-  .rechner-result{position:static}
-  .faq{padding:80px 24px}
-  #cookieBanner{bottom:80px;flex-direction:column;align-items:flex-start;gap:14px}
+  nav{padding:0 20px;width:calc(100% - 24px);top:10px}
+  .nav-links,.nav-cta{display:none}
+  .nav-ham{display:flex}
+  .mob-bar{display:flex}
+  .wa-float{display:none}
+  #side-dots,#panel-counter{display:none}
 }
 </style>
 </head>
 <body>
 
-<!-- PAGE LOADER -->
+<!-- LOADER -->
 <div id="loader">
-  <div class="loader-logo">SCH<span>I</span>WIG</div>
-  <div class="loader-sub">Immobilien · Zwickau</div>
+  <div style="display:flex;gap:0">
+    <span class="ll">S</span><span class="ll">C</span><span class="ll">H</span><span class="ll accent">I</span><span class="ll">W</span><span class="ll">I</span><span class="ll">G</span>
+  </div>
+  <div class="loader-sub" id="loaderSub">Immobilien · Zwickau</div>
   <div class="loader-track"><div id="loader-fill"></div></div>
-  <div class="loader-pct" id="loader-pct">0%</div>
+  <div class="loader-pct" id="loaderPct">0%</div>
 </div>
-
-<!-- SCROLL PROGRESS -->
-<div id="progress"></div>
 
 <!-- NAV -->
 <nav class="glass" id="mainNav">
@@ -943,12 +360,13 @@ footer{
     <div class="nav-logo-sub">Immobilien · Zwickau</div>
   </div>
   <ul class="nav-links">
-    <li><a href="#leistungen">Leistungen</a></li>
-    <li><a href="#objekte">Objekte</a></li>
-    <li><a href="#about">Über Lukas</a></li>
-    <li><a href="#kontakt">Kontakt</a></li>
+    <li><a href="leistungen.html">Leistungen</a></li>
+    <li><a href="referenzen.html">Referenzen</a></li>
+    <li><a href="objekte.html">Objekte</a></li>
+    <li><a href="ueber.html">Über uns</a></li>
+    <li><a href="#" data-slide="5">Kontakt</a></li>
   </ul>
-  <a href="tel:+4915735792768" class="nav-cta magnetic">Jetzt anrufen</a>
+  <a href="tel:+4915735792768" class="nav-cta">Jetzt anrufen</a>
   <button class="nav-ham" id="hamburger" aria-label="Menü">
     <span></span><span></span><span></span>
   </button>
@@ -956,717 +374,334 @@ footer{
 
 <!-- MOBILE NAV -->
 <div class="nav-mob" id="navMob">
-  <a href="#leistungen" onclick="closeMob()">Leistungen</a>
-  <a href="#objekte" onclick="closeMob()">Objekte</a>
-  <a href="#about" onclick="closeMob()">Über Lukas</a>
-  <a href="#kontakt" onclick="closeMob()">Kontakt</a>
-  <a href="tel:+4915735792768" onclick="closeMob()" style="color:var(--gold)">📞 0157 3579 2768</a>
+  <a href="leistungen.html" onclick="closeMob()">Leistungen</a>
+  <a href="referenzen.html" onclick="closeMob()">Referenzen</a>
+  <a href="objekte.html" onclick="closeMob()">Objekte</a>
+  <a href="ueber.html" onclick="closeMob()">Über uns</a>
+  <a href="#" data-slide="5" onclick="closeMob()">Kontakt</a>
+  <a href="tel:+4915735792768" onclick="closeMob()" style="color:var(--gold)">☎ 0157 3579 2768</a>
 </div>
 
-<div class="page-wrap">
+<!-- SIDE DOTS -->
+<div id="side-dots"></div>
 
-  <!-- ═══ HERO BENTO ═══ -->
-  <section class="hero-bento" id="hero">
-    <div class="hbento">
+<!-- PANEL COUNTER -->
+<div id="panel-counter">
+  <span class="pc-current" id="pcCurrent">01</span>
+  <span class="pc-sep"></span>
+  <span class="pc-total">06</span>
+</div>
 
-      <!-- 1: Portrait (tall, col 1, rows 1+2) -->
-      <div class="hbc hbc-portrait">
-        <img src="./lukas portrait groß .jpeg" alt="Lukas Schiwig – Immobilienmakler Zwickau">
-        <div class="hbc-portrait-grad"></div>
-        <div class="hbc-portrait-badge">
-          <div class="hbc-name">Lukas Schiwig</div>
-          <div class="hbc-role">Immobilienmakler · Zwickau</div>
-        </div>
-      </div>
+<!-- SLIDE WRAP -->
+<div id="slide-wrap">
 
-      <!-- 2: Main property image (wide, col 2+3, row 1) -->
-      <div class="hbc hbc-mainimg">
-        <img src="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Immobilien Zwickau">
-        <div class="hbc-grad"></div>
-        <div class="hbc-tag">Zwickau &amp; Region</div>
-      </div>
-
-      <!-- 3: Rating (col 4, row 1) -->
-      <div class="hbc hbc-rating">
-        <div class="hbc-stars">★★★★★</div>
-        <div>
-          <div class="hbc-score">4,6</div>
-          <div class="hbc-score-lbl">Google Bewertung</div>
-          <div class="hbc-score-sub">37 verifizierte<br>Rezensionen</div>
-        </div>
-      </div>
-
-      <!-- 4: Headline (col 2, row 2) -->
-      <div class="hbc hbc-headline">
-        <h1 class="hbc-h1">Manche kennen<br>Zwickau. Ich kenne<br>die <em>richtigen Menschen.</em></h1>
-      </div>
-
-      <!-- 5: Sub + CTA (col 3, row 2) -->
-      <div class="hbc hbc-cta">
-        <p class="hbc-sub">Persönlicher Einsatz.<br>Digitale Vermarktung.<br>Echte Ergebnisse.</p>
-        <a href="#kontakt" class="hbc-btn magnetic">Kostenlos bewerten →</a>
-      </div>
-
-      <!-- 6: Location (col 4, row 2) -->
-      <div class="hbc hbc-loc">
-        <span class="hbc-loc-eyebrow">Standort</span>
-        <div>
-          <div class="hbc-loc-city">Zwickau</div>
-          <div class="hbc-loc-sub">Sachsen · Deutschland</div>
-        </div>
-        <div class="hbc-scroll-hint">
-          <div class="hbc-scroll-line"></div>
-          Scroll
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ═══ PORTFOLIO CAROUSEL ═══ -->
-  <section class="portfolio" id="portfolio">
-    <div class="portfolio-header">
-      <div>
-        <div class="section-eyebrow rv">Referenzen</div>
-        <h2 class="section-h2 rv" style="margin-bottom:0">Jedes Objekt eine <em>Erfolgsgeschichte.</em></h2>
-      </div>
-      <div class="car-nav rv">
-        <button class="car-btn" id="carPrev" aria-label="Zurück">←</button>
-        <button class="car-btn" id="carNext" aria-label="Weiter">→</button>
-      </div>
-    </div>
-    <div class="carousel-viewport">
-      <div class="carousel-track" id="carTrack">
-
-        <div class="por-card">
-          <div class="por-img-wrap">
-            <img class="por-img" src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Einfamilienhaus verkauft" loading="lazy">
-            <span class="por-badge sold">✓ Verkauft</span>
-            <span class="por-days">in 11 Tagen</span>
-          </div>
-          <div class="por-body">
-            <div class="por-type">Einfamilienhaus</div>
-            <div class="por-title">Freistehendes EFH</div>
-            <div class="por-loc">📍 Zwickau-Marienthal</div>
-            <div class="por-foot">
-              <div class="por-price">148.000 €</div>
-              <div class="por-size">145 m²</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="por-card">
-          <div class="por-img-wrap">
-            <img class="por-img" src="https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Wohnung vermietet" loading="lazy">
-            <span class="por-badge rented">✓ Vermietet</span>
-            <span class="por-days">in 5 Tagen</span>
-          </div>
-          <div class="por-body">
-            <div class="por-type">Eigentumswohnung</div>
-            <div class="por-title">3-Zimmer-Wohnung</div>
-            <div class="por-loc">📍 Zwickau, Innenstadt</div>
-            <div class="por-foot">
-              <div class="por-price">420 €/Mo</div>
-              <div class="por-size">76 m²</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="por-card">
-          <div class="por-img-wrap">
-            <img class="por-img" src="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Mehrfamilienhaus verkauft" loading="lazy">
-            <span class="por-badge sold">✓ Verkauft</span>
-            <span class="por-days">in 18 Tagen</span>
-          </div>
-          <div class="por-body">
-            <div class="por-type">Mehrfamilienhaus</div>
-            <div class="por-title">MFH mit 4 Einheiten</div>
-            <div class="por-loc">📍 Lichtentanne</div>
-            <div class="por-foot">
-              <div class="por-price">210.000 €</div>
-              <div class="por-size">290 m²</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="por-card">
-          <div class="por-img-wrap">
-            <img class="por-img" src="https://images.pexels.com/photos/2121121/pexels-photo-2121121.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Penthouse vermietet" loading="lazy">
-            <span class="por-badge rented">✓ Vermietet</span>
-            <span class="por-days">in 3 Tagen</span>
-          </div>
-          <div class="por-body">
-            <div class="por-type">Penthouse</div>
-            <div class="por-title">Dachgeschoss-Wohnung</div>
-            <div class="por-loc">📍 Zwickau-Eckersbach</div>
-            <div class="por-foot">
-              <div class="por-price">590 €/Mo</div>
-              <div class="por-size">112 m²</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="por-card">
-          <div class="por-img-wrap">
-            <img class="por-img" src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Haus verkauft" loading="lazy">
-            <span class="por-badge sold">✓ Verkauft</span>
-            <span class="por-days">in 9 Tagen</span>
-          </div>
-          <div class="por-body">
-            <div class="por-type">Einfamilienhaus</div>
-            <div class="por-title">Haus mit Garten</div>
-            <div class="por-loc">📍 Werdau</div>
-            <div class="por-foot">
-              <div class="por-price">165.000 €</div>
-              <div class="por-size">160 m²</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="por-card">
-          <div class="por-img-wrap">
-            <img class="por-img" src="https://images.pexels.com/photos/1571463/pexels-photo-1571463.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Wohnung aktiv" loading="lazy">
-            <span class="por-badge active">● Aktiv</span>
-          </div>
-          <div class="por-body">
-            <div class="por-type">Eigentumswohnung</div>
-            <div class="por-title">4-Zimmer-Wohnung</div>
-            <div class="por-loc">📍 Zwickau-Planitz</div>
-            <div class="por-foot">
-              <div class="por-price">460 €/Mo</div>
-              <div class="por-size">94 m²</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-    <div class="carousel-dots" id="carDots"></div>
-  </section>
-
-  <!-- ═══ BENTO 1 — WER IST LUKAS ═══ -->
-  <section class="bento-section" id="leistungen">
-    <div class="bento-grid bg1">
-
-      <!-- Portrait -->
-      <div class="bc bc-portrait">
-        <img src="./lukas portrait groß .jpeg" alt="Lukas Schiwig – Immobilienmakler Zwickau">
-        <div class="bc-portrait-badge">
-          <div class="bc-pb-name">Lukas Schiwig</div>
-          <div class="bc-pb-sub">Immobilienmakler · §34c GewO · Zwickau</div>
-        </div>
-      </div>
-
-      <!-- Headline -->
-      <div class="bc bc-headline">
-        <span class="bc-eyebrow">Ihr Makler in Zwickau</span>
-        <h2 class="bc-h2">Manche kennen<br>Zwickau. Ich kenne<br>die <em>richtigen Menschen.</em></h2>
-      </div>
-
-      <!-- Trust badge -->
-      <div class="bc bc-trust">
-        <div class="bc-trust-stars">★★★★★</div>
-        <div>
-          <div class="bc-trust-val">4,6</div>
-          <div class="bc-trust-lbl">Google Bewertung</div>
-          <div class="bc-trust-sub">37 verifizierte<br>Rezensionen</div>
-        </div>
-      </div>
-
-      <!-- Stat: Bewertungen -->
-      <div class="bc bc-stat">
-        <span class="bc-sn"><span class="bc-counter" data-target="37">0</span></span>
-        <span class="bc-sl">Google<br>Bewertungen</span>
-      </div>
-
-      <!-- Stat: Abschluss -->
-      <div class="bc bc-stat">
-        <span class="bc-sn"><span class="bc-counter" data-target="11">0</span><sup> Tage</sup></span>
-        <span class="bc-sl">Ø bis zur<br>Schlüsselübergabe</span>
-      </div>
-
-      <!-- Stat: Digital -->
-      <div class="bc bc-stat">
-        <span class="bc-sn"><span class="bc-counter" data-target="100">0</span><sup>%</sup></span>
-        <span class="bc-sl">Digitale<br>Vermarktung</span>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ═══ BENTO 2 — LEISTUNGEN ═══ -->
-  <section class="bento-section">
-    <div class="bento-grid bg2">
-
-      <!-- Verkauf (image card, wide) -->
-      <div class="bc bc-svc-img">
-        <img src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Immobilienverkauf Zwickau">
-        <div class="bc-grad"></div>
-        <div class="bc-svc-body">
-          <div class="bc-svc-title">Immobilienverkauf</div>
-          <div class="bc-svc-text">Professionelle Fotos · Maximale Online-Reichweite · Schnelle Abwicklung</div>
-        </div>
-      </div>
-
-      <!-- Bewertung (tall, navy) -->
-      <div class="bc bc-tall" style="background:var(--gold)">
-        <div class="bc-icon">📊</div>
-        <div class="bc-svc-title">Kostenlose<br>Bewertung</div>
-        <div class="bc-svc-text">Marktgerechte Wertermittlung — ohne Verpflichtung, fundiert und transparent.</div>
-        <a href="#rechner" class="bc-link">Jetzt berechnen →</a>
-      </div>
-
-      <!-- Vermietung -->
-      <div class="bc bc-sm">
-        <div class="bc-icon">🔑</div>
-        <div class="bc-svc-title">Vermietung</div>
-        <div class="bc-svc-text">Solvente Mieter finden, Mietvertrag aufsetzen, Übergabe dokumentieren.</div>
-      </div>
-
-      <!-- CTA (wide, kontakt) -->
-      <a href="#kontakt" class="bc bc-cta">
-        <div class="bc-cta-text">
-          <div class="bc-cta-eyebrow">Kostenlos · Unverbindlich</div>
-          <div class="bc-cta-title">Sprechen wir über<br>Ihre Immobilie.</div>
-        </div>
-        <div class="bc-cta-arrow">→</div>
-      </a>
-
-      <!-- Beratung -->
-      <div class="bc bc-sm">
-        <div class="bc-icon">💬</div>
-        <div class="bc-svc-title">Beratung</div>
-        <div class="bc-svc-text">Kauf, Verkauf, Investment — ich entwickle Ihre optimale Strategie.</div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ═══ OBJEKTE (horizontal scroll) ═══ -->
-  <section class="objekte-wrap" id="objekte">
-    <div class="objekte-header">
-      <div>
-        <div class="section-eyebrow rv">Aktuelle Angebote</div>
-        <h2 class="section-h2 rv">Aktuelle <em>Objekte</em></h2>
-        <p class="section-sub rv">Ausgewählte Immobilien in Zwickau und Umgebung — kaufen oder mieten.</p>
-      </div>
-      <a href="#kontakt" class="objekte-link rv">Alle Objekte anfragen →</a>
-    </div>
-    <div id="listings-section">
-      <div id="listings-track">
-
-        <!-- Listing 1 -->
-        <div class="listing-card magnetic">
-          <div class="listing-img-wrap">
-            <img class="listing-img" src="https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=600" alt="2-Zimmer Wohnung Zwickau" loading="lazy">
-            <div class="listing-tag">Miete</div>
-          </div>
-          <div class="listing-body">
-            <div class="listing-price">230 € <small>/ Monat</small></div>
-            <div class="listing-title">2-Zimmer-Wohnung</div>
-            <div class="listing-loc">📍 Zwickau, Innenstadt</div>
-            <div class="listing-meta">
-              <div class="lm"><strong>46</strong> m²</div>
-              <div class="lm"><strong>2</strong> Zimmer</div>
-              <div class="lm"><strong>EG</strong></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Listing 2 -->
-        <div class="listing-card magnetic">
-          <div class="listing-img-wrap">
-            <img class="listing-img" src="https://images.pexels.com/photos/1571463/pexels-photo-1571463.jpeg?auto=compress&cs=tinysrgb&w=600" alt="3-Zimmer Wohnung Zwickau" loading="lazy">
-            <div class="listing-tag">Miete</div>
-          </div>
-          <div class="listing-body">
-            <div class="listing-price">375 € <small>/ Monat</small></div>
-            <div class="listing-title">3-Zimmer-Wohnung</div>
-            <div class="listing-loc">📍 Zwickau-Marienthal</div>
-            <div class="listing-meta">
-              <div class="lm"><strong>72</strong> m²</div>
-              <div class="lm"><strong>3</strong> Zimmer</div>
-              <div class="lm"><strong>2.OG</strong></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Listing 3 -->
-        <div class="listing-card magnetic">
-          <div class="listing-img-wrap">
-            <img class="listing-img" src="https://images.pexels.com/photos/164338/pexels-photo-164338.jpeg?auto=compress&cs=tinysrgb&w=600" alt="4-Zimmer Wohnung Zwickau" loading="lazy">
-            <div class="listing-tag">Miete</div>
-          </div>
-          <div class="listing-body">
-            <div class="listing-price">460 € <small>/ Monat</small></div>
-            <div class="listing-title">4-Zimmer-Wohnung</div>
-            <div class="listing-loc">📍 Zwickau-Planitz</div>
-            <div class="listing-meta">
-              <div class="lm"><strong>94</strong> m²</div>
-              <div class="lm"><strong>4</strong> Zimmer</div>
-              <div class="lm"><strong>1.OG</strong></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Listing 4 -->
-        <div class="listing-card magnetic">
-          <div class="listing-img-wrap">
-            <img class="listing-img" src="https://images.pexels.com/photos/2121121/pexels-photo-2121121.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Penthouse Zwickau" loading="lazy">
-            <div class="listing-tag gold">Premium</div>
-          </div>
-          <div class="listing-body">
-            <div class="listing-price">600 € <small>/ Monat</small></div>
-            <div class="listing-title">Penthouse-Wohnung</div>
-            <div class="listing-loc">📍 Zwickau-Eckersbach</div>
-            <div class="listing-meta">
-              <div class="lm"><strong>118</strong> m²</div>
-              <div class="lm"><strong>5</strong> Zimmer</div>
-              <div class="lm"><strong>DG</strong></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Listing 5 -->
-        <div class="listing-card magnetic">
-          <div class="listing-img-wrap">
-            <img class="listing-img" src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Einfamilienhaus Zwickau" loading="lazy">
-            <div class="listing-tag gold">Kauf</div>
-          </div>
-          <div class="listing-body">
-            <div class="listing-price">50.000 €</div>
-            <div class="listing-title">Einfamilienhaus</div>
-            <div class="listing-loc">📍 Lichtentanne</div>
-            <div class="listing-meta">
-              <div class="lm"><strong>140</strong> m²</div>
-              <div class="lm"><strong>Grundst.</strong></div>
-              <div class="lm"><strong>680 m²</strong></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Placeholder -->
-        <div class="listing-placeholder">
-          <div class="ph-icon">🏗️</div>
-          <p>Ihr Objekt könnte hier stehen. Sprechen Sie mich an — ich vermarkte es diskret und schnell.</p>
-          <a href="#kontakt">Jetzt anfragen →</a>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ ÜBER LUKAS ═══ -->
-  <section class="about" id="about">
-    <div class="about-inner">
-      <!-- Sticky image column -->
-      <div class="about-img-col">
-        <div class="about-img-wrap">
-          <img class="about-img" id="aboutImg"
-            src="./lukas portrait groß .jpeg"
-            alt="Lukas Schiwig – Immobilienmakler Zwickau">
-          <div class="about-img-cover" id="aboutCover"></div>
-          <div class="about-img-overlay"></div>
-          <div class="about-img-badge glass">
-            <div class="about-badge-stars">★★★★★</div>
-            <div class="about-badge-text">Lukas Schiwig</div>
-            <div class="about-badge-sub">Immobilienmakler · Zwickau</div>
-          </div>
-        </div>
-      </div>
-      <!-- Scrolling text panels -->
-      <div class="about-text-col">
-
-        <div class="about-panel rv">
-          <span class="about-panel-num">01</span>
-          <h3 class="about-panel-title">Lokal verwurzelt, <em>digital aufgestellt.</em></h3>
-          <p class="about-panel-text">
-            Ich kenne Zwickau und die Region wie meine Westentasche — von Marienthal
-            bis Lichtentanne, von der Innenstadt bis Planitz. Dieses lokale Wissen
-            kombiniere ich mit modernsten digitalen Vermarktungstools, die Ihre
-            Immobilie dort zeigen, wo Käufer und Mieter wirklich suchen.
-          </p>
-          <div class="about-tags">
-            <span class="about-tag">Zwickau</span>
-            <span class="about-tag">Lichtentanne</span>
-            <span class="about-tag">Sachsen</span>
-          </div>
-        </div>
-
-        <div class="about-panel rv">
-          <span class="about-panel-num">02</span>
-          <h3 class="about-panel-title">Schnell, <em>persönlich,</em> zuverlässig.</h3>
-          <p class="about-panel-text">
-            Keine langen Wartezeiten, kein Durchstellen an Assistenten. Bei mir
-            bekommen Sie einen direkten Draht — ich antworte innerhalb von 24
-            Stunden, meist schon in wenigen Stunden. Viele meiner Kunden kommen
-            über persönliche Empfehlungen. Das ist mein Anspruch.
-          </p>
-          <div class="about-tags">
-            <span class="about-tag">Direktkontakt</span>
-            <span class="about-tag">4,6★ Bewertung</span>
-            <span class="about-tag">37 Rezensionen</span>
-          </div>
-        </div>
-
-        <div class="about-panel rv">
-          <span class="about-panel-num">03</span>
-          <h3 class="about-panel-title">Ihr Erfolg ist <em>mein Ziel.</em></h3>
-          <p class="about-panel-text">
-            Ob Sie kaufen, verkaufen oder vermieten möchten — ich entwickle für Sie
-            die optimale Strategie. Keine Standardlösungen, keine leeren Versprechen.
-            Nur ehrliche, professionelle Begleitung von Anfang bis Ende.
-          </p>
-          <div class="about-tags">
-            <span class="about-tag">Kostenlose Bewertung</span>
-            <span class="about-tag">Transparenz</span>
-            <span class="about-tag">Ergebnisorientiert</span>
-          </div>
-        </div>
-
-        <div class="rv" style="padding-top:16px">
-          <a href="tel:+4915735792768" class="btn-gold magnetic" style="display:inline-flex">
-            📞 Jetzt anrufen
-          </a>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ TESTIMONIALS ═══ -->
-  <section class="testi">
-    <div class="testi-header rv">
-      <div class="section-eyebrow">Was Kunden sagen</div>
-      <h2 class="section-h2">Echte <em>Stimmen.</em></h2>
-    </div>
-    <div class="testi-track-wrap">
-      <div class="testi-track" id="testiTrack">
-        <div class="testi-card glass">
-          <div class="testi-stars">★★★★★</div>
-          <p class="testi-text">"Lukas hat unsere Wohnung in weniger als 2 Wochen vermietet. Professionell, schnell und immer erreichbar. Absolut empfehlenswert!"</p>
-          <div class="testi-author">Sandra K.</div>
-          <div class="testi-date">vor 3 Monaten · Google</div>
-        </div>
-        <div class="testi-card glass">
-          <div class="testi-stars">★★★★★</div>
-          <p class="testi-text">"Sehr kompetenter und sympathischer Makler. Hat uns beim Hauskauf optimal beraten und uns nie unter Druck gesetzt. Top!"</p>
-          <div class="testi-author">Thomas &amp; Maria B.</div>
-          <div class="testi-date">vor 5 Monaten · Google</div>
-        </div>
-        <div class="testi-card glass">
-          <div class="testi-stars">★★★★★</div>
-          <p class="testi-text">"Kostenlose Bewertung war sehr detailliert und realistisch. Durch Lukas haben wir 15% über unserem Wunschpreis verkauft. Danke!"</p>
-          <div class="testi-author">Peter M.</div>
-          <div class="testi-date">vor 1 Monat · Google</div>
-        </div>
-        <div class="testi-card glass">
-          <div class="testi-stars">★★★★☆</div>
-          <p class="testi-text">"Sehr angenehme Zusammenarbeit. Lukas kennt die Region sehr gut und hat schnell den richtigen Mieter für meine Wohnung gefunden."</p>
-          <div class="testi-author">Renate S.</div>
-          <div class="testi-date">vor 7 Monaten · Google</div>
-        </div>
-        <div class="testi-card glass">
-          <div class="testi-stars">★★★★★</div>
-          <p class="testi-text">"Junger, dynamischer Makler mit viel Know-how. Moderne Vermarktung, tolle Fotos, schnelle Reaktion. Sehr gerne wieder!"</p>
-          <div class="testi-author">Klaus &amp; Inge W.</div>
-          <div class="testi-date">vor 2 Monaten · Google</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ IMMOBILIENWERT-RECHNER ═══ -->
-  <section class="rechner" id="rechner">
-    <div class="rechner-inner">
-      <div class="rechner-form">
-        <div class="section-eyebrow rv">Kostenlos &amp; Unverbindlich</div>
-        <h2 class="section-h2 rv">Was ist Ihre<br><em>Immobilie wert?</em></h2>
-        <p class="section-sub rv" style="margin-bottom:12px">In 30 Sekunden zur ersten Einschätzung — dann ein persönliches Gespräch mit Lukas.</p>
-
-        <span class="rcl-label">Art der Immobilie</span>
-        <div class="rcl-types" id="rcType">
-          <button class="rcl-pill active" data-val="wohnung">Wohnung</button>
-          <button class="rcl-pill" data-val="haus">Einfamilienhaus</button>
-          <button class="rcl-pill" data-val="mehrfamilien">Mehrfamilienhaus</button>
-          <button class="rcl-pill" data-val="gewerbe">Gewerbe</button>
-        </div>
-
-        <span class="rcl-label">Wohnfläche</span>
-        <span class="rcl-readout" id="rcAreaVal">120 m²</span>
-        <input type="range" class="rcl-slider" id="rcArea" min="30" max="350" value="120" step="5">
-        <div style="display:flex;justify-content:space-between;font-size:.62rem;color:var(--muted);margin-top:6px;font-weight:300"><span>30 m²</span><span>350 m²</span></div>
-
-        <span class="rcl-label">Baujahr</span>
-        <select id="rcYear" style="width:100%;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 16px;color:var(--white);font-size:.82rem;font-family:'Inter',sans-serif;outline:none;cursor:pointer;margin-bottom:4px;-webkit-appearance:none;appearance:none">
-          <option value="new">2010 – heute</option>
-          <option value="mid" selected>1990 – 2009</option>
-          <option value="old">1970 – 1989</option>
-          <option value="veryold">Vor 1970</option>
-        </select>
-
-        <span class="rcl-label">Zustand</span>
-        <div class="rcl-conditions" id="rcCond" style="grid-template-columns:repeat(2,1fr)">
-          <button class="rcl-cond" data-val="0.75">🔧<br>Renovierungs­bedarf</button>
-          <button class="rcl-cond active" data-val="1.0">👍<br>Gepflegt</button>
-          <button class="rcl-cond" data-val="1.2">✨<br>Modernisiert</button>
-          <button class="rcl-cond" data-val="1.4">🏆<br>Neuwertig</button>
-        </div>
-      </div>
-
-      <div class="rechner-result glass rv" id="rechnerResult">
-        <span class="rr-eyebrow">Geschätzter Marktwert</span>
-        <div class="rr-value" id="rrValue">132.000 €</div>
-        <div class="rr-range" id="rrRange">Spanne: 116.000 – 148.000 €</div>
-        <div class="rr-divider"></div>
-        <p class="rr-note">
-          Schätzung auf Basis aktueller Vergleichswerte im Raum Zwickau.
-          Für eine <strong>präzise, kostenlose Bewertung</strong> sprechen Sie persönlich mit Lukas.
-        </p>
-        <a href="#kontakt" class="btn-gold rr-cta magnetic">Jetzt kostenlos bewerten lassen</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ FAQ ═══ -->
-  <section class="faq" id="faq">
-    <div class="faq-inner">
-      <div class="section-eyebrow rv">Häufige Fragen</div>
-      <h2 class="section-h2 rv">Antworten, die <em>weiterhelfen.</em></h2>
-      <div class="faq-list rv">
-
-        <div class="faq-item">
-          <button class="faq-q">
-            Was kostet mich die Zusammenarbeit als Verkäufer?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-a"><div class="faq-a-inner">
-            Als Verkäufer zahlen Sie in der Regel <strong>keine Maklerprovision</strong> — die Courtage wird geteilt oder vollständig vom Käufer getragen. Ich berate Sie vorab transparent über die genauen Konditionen. Kostenlose Bewertung und Erstgespräch sind immer gratis.
-          </div></div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-q">
-            Wie lange dauert es, eine Immobilie zu verkaufen?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-a"><div class="faq-a-inner">
-            Mit professioneller Vermarktung und meinem Netzwerk liegt die <strong>durchschnittliche Verkaufszeit bei 11–28 Tagen</strong>. In meiner Praxis in Zwickau und Umgebung habe ich Objekte teils in weniger als 2 Wochen erfolgreich vermittelt.
-          </div></div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-q">
-            Wie wird der Wert meiner Immobilie ermittelt?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-a"><div class="faq-a-inner">
-            Ich nutze das <strong>Vergleichswertverfahren</strong> auf Basis aktueller Transaktionsdaten aus der Region, kombiniert mit einer Besichtigung vor Ort. Lage, Zustand, Ausstattung, Baujahr und aktuelle Marktentwicklung fließen ein. Das Ergebnis ist eine fundierte, marktgerechte Bewertung — kostenlos und unverbindlich.
-          </div></div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-q">
-            Welche Unterlagen brauche ich für den Verkauf?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-a"><div class="faq-a-inner">
-            Für ein Erstgespräch brauchen Sie noch nichts. Für den Verkaufsprozess sind später relevant: <strong>Grundbuchauszug, Energieausweis, Grundrisse, Baupläne</strong> und ggf. Teilungserklärung (bei ETW). Ich unterstütze Sie dabei, alle nötigen Dokumente zu beschaffen.
-          </div></div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-q">
-            Arbeiten Sie auch in umliegenden Gemeinden?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-a"><div class="faq-a-inner">
-            Ja. Neben Zwickau bin ich in der gesamten Region aktiv — darunter <strong>Lichtentanne, Werdau, Crimmitschau, Meerane und Glauchau</strong>. Sprechen Sie mich einfach an, wenn Sie unsicher sind, ob Ihr Standort dabei ist.
-          </div></div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-q">
-            Kann ich eine Immobilie kaufen, ohne sie vorher zu besichtigen?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-a"><div class="faq-a-inner">
-            Davon rate ich grundsätzlich ab — aber ich biete <strong>virtuelle Besichtigungen per Video-Call oder 3D-Rundgang</strong> an, falls eine persönliche Besichtigung nicht sofort möglich ist. Für Kapitalanleger aus anderen Regionen ist das ein bewährtes Modell.
-          </div></div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ CTA ═══ -->
-  <section class="cta-section" id="cta">
+  <!-- ═══ PANEL 0 — REVEAL ═══ -->
+  <div class="slide" id="slide-reveal">
     <div class="orbs">
-      <div class="orb orb-gold" style="width:600px;height:600px;top:-30%;left:-10%;animation:drift1 16s ease-in-out infinite;opacity:.6"></div>
-      <div class="orb orb-blue" style="width:400px;height:400px;bottom:-20%;right:-5%;animation:drift2 12s ease-in-out infinite;opacity:.6"></div>
+      <div class="orb" style="width:700px;height:700px;background:radial-gradient(circle,rgba(26,63,143,.15),transparent 65%);top:-20%;left:-10%;animation:drift1 14s ease-in-out infinite"></div>
+      <div class="orb" style="width:500px;height:500px;background:radial-gradient(circle,rgba(42,86,198,.1),transparent 65%);bottom:-15%;right:-8%;animation:drift2 10s ease-in-out infinite"></div>
     </div>
-    <div style="position:relative;z-index:1">
-      <div class="cta-gold-line rv"></div>
-      <h2 class="cta-h2 rv">Ihre Immobilie verdient<br>die <em>beste Vermarktung.</em></h2>
-      <p class="cta-sub rv">
-        Lassen Sie mich Ihre Immobilie kostenlos bewerten und erfahren Sie,
-        was Sie wirklich erzielen können. Unverbindlich, ehrlich, persönlich.
-      </p>
-      <div class="cta-btns rv">
-        <a href="#kontakt" class="btn-gold magnetic">Kostenlos bewerten lassen</a>
-        <a href="tel:+4915735792768" class="btn-outline magnetic">📞 0157 3579 2768</a>
+    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:40px">
+      <div class="reveal-logo" id="revealLogo">
+        <span class="rl">S</span><span class="rl">C</span><span class="rl">H</span><span class="rl accent">I</span><span class="rl">W</span><span class="rl">I</span><span class="rl">G</span>
+      </div>
+      <div class="reveal-sub" id="revealSub">Immobilien · Zwickau</div>
+      <div class="reveal-line" id="revealLine"></div>
+      <div class="swipe-hint">
+        <div class="swipe-line"></div>
+        <div class="swipe-txt">Scroll to enter</div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- ═══ KONTAKT ═══ -->
-  <section class="kontakt" id="kontakt">
+  <!-- ═══ PANEL 1 — HERO BENTO ═══ -->
+  <div class="slide" id="slide-hero">
+    <div class="hero-bento">
+      <div class="hbento">
+        <div class="hbc hbc-portrait">
+          <img src="./lukas portrait groß .jpeg" alt="Lukas Schiwig – Immobilienmakler Zwickau">
+          <div class="hbc-portrait-grad"></div>
+          <div class="hbc-portrait-badge">
+            <div class="hbc-name">Lukas Schiwig</div>
+            <div class="hbc-role">Immobilienmakler · Zwickau</div>
+          </div>
+        </div>
+        <div class="hbc hbc-mainimg">
+          <img src="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Immobilien Zwickau">
+          <div class="hbc-grad"></div>
+          <div class="hbc-tag">Zwickau &amp; Region</div>
+        </div>
+        <div class="hbc hbc-rating">
+          <div class="hbc-stars">★★★★★</div>
+          <div>
+            <div class="hbc-score">4,6</div>
+            <div class="hbc-score-lbl">Google Bewertung</div>
+            <div class="hbc-score-sub">37 verifizierte<br>Rezensionen</div>
+          </div>
+        </div>
+        <div class="hbc hbc-headline">
+          <h1 class="hbc-h1">Manche kennen<br>Zwickau. Ich kenne<br>die <em>richtigen Menschen.</em></h1>
+        </div>
+        <div class="hbc hbc-cta">
+          <p class="hbc-sub">Persönlicher Einsatz.<br>Digitale Vermarktung.<br>Echte Ergebnisse.</p>
+          <a href="#" data-slide="5" class="hbc-btn">Kostenlos bewerten →</a>
+        </div>
+        <div class="hbc hbc-loc">
+          <span class="hbc-loc-eyebrow">Standort</span>
+          <div>
+            <div class="hbc-loc-city">Zwickau</div>
+            <div class="hbc-loc-sub">Sachsen · Deutschland</div>
+          </div>
+          <div class="hbc-scroll-hint">
+            <div class="hbc-scroll-line"></div>
+            Scroll
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PANEL 2 — LUKAS TEASER ═══ -->
+  <div class="slide" id="slide-lukas">
+    <div class="lukas-inner">
+      <div class="lukas-portrait-wrap">
+        <img src="./lukas portrait groß .jpeg" alt="Lukas Schiwig">
+      </div>
+      <div class="lukas-text">
+        <span class="section-eyebrow">Ihr Makler</span>
+        <h2 class="section-h2">Persönlich.<br><em>Professionell.</em></h2>
+        <div class="lukas-pills">
+          <span class="fact-pill">4,6★ · 37 Bewertungen</span>
+          <span class="fact-pill">Ø 11 Tage bis Abschluss</span>
+          <span class="fact-pill">100% Digital</span>
+        </div>
+        <p class="lukas-p">Als Immobilienmakler aus Zwickau kenne ich den lokalen Markt wie kein anderer. Mein Versprechen: persönliche Betreuung, schnelle Abwicklung und ein Ergebnis, das Sie überzeugt.</p>
+        <p class="lukas-p">Ich begleite Sie von der ersten Bewertung bis zur Schlüsselübergabe – diskret, kompetent und mit echtem Einsatz.</p>
+        <div class="lukas-btns">
+          <a href="ueber.html" class="lukas-link">Mehr über mich →</a>
+          <a href="tel:+4915735792768" class="btn-outline-dark">Jetzt anrufen</a>
+        </div>
+        <div class="lukas-stats">
+          <div class="lukas-stat">
+            <span class="lukas-stat-val">37</span>
+            <span class="lukas-stat-lbl">Google Bewertungen</span>
+          </div>
+          <div class="lukas-stat">
+            <span class="lukas-stat-val">11</span>
+            <span class="lukas-stat-lbl">Tage Ø bis Abschluss</span>
+          </div>
+          <div class="lukas-stat">
+            <span class="lukas-stat-val">100%</span>
+            <span class="lukas-stat-lbl">Digital &amp; transparent</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PANEL 3 — PORTFOLIO TEASER ═══ -->
+  <div class="slide" id="slide-portfolio">
+    <div class="port-header">
+      <div>
+        <span class="section-eyebrow">Referenzen</span>
+        <h2 class="section-h2" style="margin-top:12px">Jedes Objekt eine <em>Erfolgsgeschichte.</em></h2>
+      </div>
+      <a href="referenzen.html" class="port-link">Alle Referenzen →</a>
+    </div>
+    <div class="inf-track-wrap" id="infWrap">
+      <div class="inf-track" id="infTrack">
+        <div class="por-card">
+          <div class="por-img-wrap">
+            <img class="por-img" src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=900" alt="EFH Marienthal">
+            <span class="por-badge sold">Verkauft</span>
+            <span class="por-days">In 11 Tagen</span>
+          </div>
+          <div class="por-body">
+            <div class="por-type">Einfamilienhaus · Verkauf</div>
+            <div class="por-title">EFH Marienthal</div>
+            <div class="por-loc">Zwickau-Marienthal</div>
+            <div class="por-foot">
+              <span class="por-price">148.000 €</span>
+              <span class="por-size">Verkauft</span>
+            </div>
+          </div>
+        </div>
+        <div class="por-card">
+          <div class="por-img-wrap">
+            <img class="por-img" src="https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=900" alt="3-Zi Wohnung Innenstadt">
+            <span class="por-badge rented">Vermietet</span>
+            <span class="por-days">In 5 Tagen</span>
+          </div>
+          <div class="por-body">
+            <div class="por-type">3-Zimmer-Wohnung · Vermietung</div>
+            <div class="por-title">3-Zi Wohnung Innenstadt</div>
+            <div class="por-loc">Zwickau Innenstadt</div>
+            <div class="por-foot">
+              <span class="por-price">420 €/Mo</span>
+              <span class="por-size">Vermietet</span>
+            </div>
+          </div>
+        </div>
+        <div class="por-card">
+          <div class="por-img-wrap">
+            <img class="por-img" src="https://images.pexels.com/photos/164338/pexels-photo-164338.jpeg?auto=compress&cs=tinysrgb&w=900" alt="MFH Lichtentanne">
+            <span class="por-badge sold">Verkauft</span>
+            <span class="por-days">In 18 Tagen</span>
+          </div>
+          <div class="por-body">
+            <div class="por-type">Mehrfamilienhaus · Verkauf</div>
+            <div class="por-title">MFH Lichtentanne</div>
+            <div class="por-loc">Lichtentanne</div>
+            <div class="por-foot">
+              <span class="por-price">210.000 €</span>
+              <span class="por-size">Verkauft</span>
+            </div>
+          </div>
+        </div>
+        <div class="por-card">
+          <div class="por-img-wrap">
+            <img class="por-img" src="https://images.pexels.com/photos/2121121/pexels-photo-2121121.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Penthouse Eckersbach">
+            <span class="por-badge rented">Vermietet</span>
+            <span class="por-days">In 3 Tagen</span>
+          </div>
+          <div class="por-body">
+            <div class="por-type">Penthouse · Vermietung</div>
+            <div class="por-title">Penthouse Eckersbach</div>
+            <div class="por-loc">Zwickau-Eckersbach</div>
+            <div class="por-foot">
+              <span class="por-price">590 €/Mo</span>
+              <span class="por-size">Vermietet</span>
+            </div>
+          </div>
+        </div>
+        <div class="por-card">
+          <div class="por-img-wrap">
+            <img class="por-img" src="https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Haus mit Garten Werdau">
+            <span class="por-badge sold">Verkauft</span>
+            <span class="por-days">In 9 Tagen</span>
+          </div>
+          <div class="por-body">
+            <div class="por-type">Haus mit Garten · Verkauf</div>
+            <div class="por-title">Haus mit Garten Werdau</div>
+            <div class="por-loc">Werdau</div>
+            <div class="por-foot">
+              <span class="por-price">165.000 €</span>
+              <span class="por-size">Verkauft</span>
+            </div>
+          </div>
+        </div>
+        <div class="por-card">
+          <div class="por-img-wrap">
+            <img class="por-img" src="https://images.pexels.com/photos/1571463/pexels-photo-1571463.jpeg?auto=compress&cs=tinysrgb&w=900" alt="4-Zi Wohnung Planitz">
+            <span class="por-badge active">Aktiv</span>
+          </div>
+          <div class="por-body">
+            <div class="por-type">4-Zimmer-Wohnung · Vermietung</div>
+            <div class="por-title">4-Zi Wohnung Planitz</div>
+            <div class="por-loc">Zwickau-Planitz</div>
+            <div class="por-foot">
+              <span class="por-price">460 €/Mo</span>
+              <span class="por-size">Aktuell aktiv</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PANEL 4 — WERTRECHNER ═══ -->
+  <div class="slide" id="slide-rechner">
+    <div class="rechner-inner">
+      <div>
+        <div class="rechner-title">
+          <span class="section-eyebrow">Immobilienbewertung</span>
+          <h2 class="section-h2" style="margin-top:14px">Was ist Ihre<br><em>Immobilie wert?</em></h2>
+        </div>
+        <span class="rcl-label">Immobilientyp</span>
+        <div class="rcl-types">
+          <span class="rcl-pill active" data-type="haus">Haus</span>
+          <span class="rcl-pill" data-type="wohnung">Wohnung</span>
+          <span class="rcl-pill" data-type="mfh">Mehrfamilienhaus</span>
+          <span class="rcl-pill" data-type="grundstueck">Grundstück</span>
+        </div>
+        <span class="rcl-label">Wohnfläche</span>
+        <input type="range" class="rcl-slider" id="areaSlider" min="40" max="400" value="120" step="5">
+        <span class="rcl-readout" id="areaReadout">120 m²</span>
+        <span class="rcl-label">Baujahr</span>
+        <div class="rcl-years">
+          <span class="rcl-year active" data-year="alt">vor 1970</span>
+          <span class="rcl-year" data-year="mid">1970–1990</span>
+          <span class="rcl-year" data-year="neu">1990–2010</span>
+          <span class="rcl-year" data-year="modern">ab 2010</span>
+        </div>
+        <span class="rcl-label">Zustand</span>
+        <div class="rcl-conditions">
+          <span class="rcl-cond active" data-cond="renovierungsbedarf">Renovierungsbedarf</span>
+          <span class="rcl-cond" data-cond="gepflegt">Gepflegt</span>
+          <span class="rcl-cond" data-cond="modernisiert">Modernisiert</span>
+          <span class="rcl-cond" data-cond="neubau">Neubauqualität</span>
+        </div>
+      </div>
+      <div>
+        <div class="rechner-result glass">
+          <span class="rr-eyebrow">Geschätzter Marktwert</span>
+          <div class="rr-value" id="rrValue">192.000 €</div>
+          <div class="rr-range" id="rrRange">Bandbreite: 178.000 – 208.000 €</div>
+          <div class="rr-divider"></div>
+          <p class="rr-note">Diese Schätzung basiert auf aktuellen Marktdaten für die Region Zwickau. Für eine präzise Bewertung empfehle ich ein persönliches Gespräch.</p>
+          <a href="#" data-slide="5" class="btn-gold rr-cta">Jetzt kostenlos bewerten</a>
+        </div>
+        <p style="font-size:.66rem;color:var(--muted);margin-top:14px;text-align:center;font-weight:300">Unverbindliche Schätzung · Kostenlose Präzisionsbewertung auf Anfrage</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PANEL 5 — KONTAKT ═══ -->
+  <div class="slide" id="slide-kontakt">
     <div class="kontakt-inner">
-      <div class="kontakt-info">
-        <div class="section-eyebrow rv">Direktkontakt</div>
-        <h2 class="section-h2 rv">Sprechen wir <em>miteinander.</em></h2>
-        <p class="section-sub rv">
-          Ich melde mich in der Regel innerhalb von 24 Stunden.
-          Oft auch viel früher.
-        </p>
-        <div class="kinfo-item rv">
+      <div>
+        <span class="section-eyebrow">Kontakt</span>
+        <h2 class="section-h2" style="margin-top:14px">Sprechen wir über<br><em>Ihre Immobilie.</em></h2>
+        <p class="section-sub">Ich bin für Sie da – ob für eine kostenlose Bewertung, eine Besichtigung oder einfach nur ein erstes Gespräch.</p>
+        <div class="kinfo-item">
           <div class="kinfo-icon">📞</div>
           <div>
             <div class="kinfo-label">Telefon</div>
             <div class="kinfo-val"><a href="tel:+4915735792768">0157 3579 2768</a></div>
           </div>
         </div>
-        <div class="kinfo-item rv">
+        <div class="kinfo-item">
           <div class="kinfo-icon">✉️</div>
           <div>
             <div class="kinfo-label">E-Mail</div>
             <div class="kinfo-val"><a href="mailto:lukasschiwig@gmail.com">lukasschiwig@gmail.com</a></div>
           </div>
         </div>
-        <div class="kinfo-item rv">
+        <div class="kinfo-item">
           <div class="kinfo-icon">📍</div>
           <div>
-            <div class="kinfo-label">Büro</div>
+            <div class="kinfo-label">Adresse</div>
             <div class="kinfo-val">Bruno-Escher-Str. 13<br>08115 Lichtentanne</div>
           </div>
         </div>
-        <div class="kinfo-item rv">
-          <div class="kinfo-icon">⏰</div>
+        <div class="kinfo-item">
+          <div class="kinfo-icon">🕐</div>
           <div>
-            <div class="kinfo-label">Erreichbarkeit</div>
-            <div class="kinfo-val">Mo–Fr: 8–18 Uhr<br>Sa: nach Vereinbarung</div>
+            <div class="kinfo-label">Öffnungszeiten</div>
+            <div class="kinfo-val">Mo–Fr 8–18 Uhr<br>Sa nach Vereinbarung</div>
           </div>
         </div>
-        <div class="kontakt-map rv">
-          <iframe
-            src="https://maps.google.com/maps?q=Bruno-Escher-Str.+13,+08115+Lichtentanne&output=embed"
-            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-            title="Büro Lukas Schiwig Immobilien · Lichtentanne">
-          </iframe>
+        <div class="kontakt-btns">
+          <a href="tel:+4915735792768" class="btn-gold">Jetzt anrufen</a>
+          <a href="https://wa.me/4915735792768" target="_blank" class="btn-outline-dark" style="background:#25d366;border-color:#25d366;color:#fff">WhatsApp</a>
         </div>
       </div>
-      <div class="kontakt-form rv">
-        <div class="glass" style="padding:40px;border-radius:var(--r)">
+      <div>
+        <div class="glass" style="padding:36px;border-radius:20px">
+          <div style="margin-bottom:24px">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:500;color:var(--white);margin-bottom:6px">Kostenlose Anfrage</div>
+            <div style="font-size:.76rem;color:var(--muted);font-weight:300">Antwort meist innerhalb von 2 Stunden</div>
+          </div>
           <form action="https://formspree.io/f/mlgpooqw" method="POST">
             <div class="form-grid">
               <div class="form-group">
@@ -1680,456 +715,404 @@ footer{
             </div>
             <div class="form-group">
               <label>E-Mail</label>
-              <input type="email" name="email" placeholder="max@beispiel.de" required>
+              <input type="email" name="email" placeholder="max@mustermann.de" required>
             </div>
             <div class="form-group">
-              <label>Telefon (optional)</label>
+              <label>Telefon</label>
               <input type="tel" name="telefon" placeholder="0157 ...">
             </div>
             <div class="form-group">
               <label>Anliegen</label>
-              <textarea name="nachricht" placeholder="Ich möchte meine Immobilie bewerten lassen / Ich suche eine Wohnung in ..."></textarea>
+              <textarea name="nachricht" placeholder="Ich möchte meine Immobilie bewerten lassen ..."></textarea>
             </div>
-            <button type="submit" class="form-submit magnetic">Nachricht senden →</button>
-            <p class="form-note">Kostenlos · Unverbindlich · §19 UStG</p>
+            <button type="submit" class="form-submit">Anfrage senden</button>
+            <p class="form-note">Ihre Daten werden vertraulich behandelt. <a href="datenschutz.html" style="color:var(--gold)">Datenschutz</a></p>
           </form>
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- ═══ FOOTER ═══ -->
-  <footer>
-    <div class="foot-logo">SCH<span>I</span>WIG Immobilien</div>
-    <div class="foot-copy">© 2025 Lukas Schiwig · Bruno-Escher-Str. 13 · 08115 Lichtentanne</div>
-    <div class="foot-links">
-      <a href="impressum.html">Impressum</a>
-      <a href="datenschutz.html">Datenschutz</a>
+    <div class="kontakt-footer">
+      <div class="foot-logo">SCH<span>I</span>WIG Immobilien</div>
+      <div class="foot-copy">© 2025 Lukas Schiwig · Bruno-Escher-Str. 13 · 08115 Lichtentanne</div>
+      <div class="foot-links">
+        <a href="impressum.html">Impressum</a>
+        <a href="datenschutz.html">Datenschutz</a>
+      </div>
     </div>
-  </footer>
+  </div>
 
-</div><!-- /page-wrap -->
+</div><!-- /slide-wrap -->
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/4915735792768" target="_blank" class="wa-float" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- MOBILE BAR -->
+<div class="mob-bar">
+  <a href="tel:+4915735792768" class="mob-call">☎ Anrufen</a>
+  <a href="https://wa.me/4915735792768" target="_blank" class="mob-wa">WhatsApp</a>
+</div>
 
 <!-- COOKIE BANNER -->
-<div id="cookieBanner" class="glass" style="opacity:0;transform:translateY(20px)">
-  <p class="cookie-text">
-    <strong>Cookies &amp; Datenschutz</strong><br>
-    Diese Website verwendet technisch notwendige Cookies. Weitere Dienste (Google Fonts, Google Maps)
-    übertragen Daten an Google. Details in unserer
-    <a href="datenschutz.html">Datenschutzerklärung</a>.
-  </p>
+<div id="cookieBanner" class="glass">
+  <div class="cookie-text"><strong>Cookie-Hinweis:</strong> Diese Website verwendet Cookies für ein optimales Erlebnis. <a href="datenschutz.html">Datenschutz</a></div>
   <div class="cookie-btns">
-    <button class="cookie-accept" id="cookieAccept">Akzeptieren</button>
-    <button class="cookie-decline" id="cookieDecline">Ablehnen</button>
+    <button class="cookie-accept" onclick="acceptCookie()">Akzeptieren</button>
+    <button class="cookie-decline" onclick="declineCookie()">Ablehnen</button>
   </div>
 </div>
 
-<!-- WHATSAPP FLOAT -->
-<a href="https://wa.me/4915735792768" class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp">
-  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.113 1.523 5.843L0 24l6.338-1.494A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.793 9.793 0 01-5.034-1.393l-.36-.215-3.762.887.926-3.656-.236-.376A9.818 9.818 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/>
-  </svg>
-</a>
-
-<!-- MOBILE STICKY BAR -->
-<div class="mob-bar">
-  <a href="tel:+4915735792768" class="mob-call">📞 Anrufen</a>
-  <a href="https://wa.me/4915735792768" class="mob-wa" target="_blank">💬 WhatsApp</a>
-</div>
-
-<!-- GSAP -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<!-- SCHEMA.ORG -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"LocalBusiness","name":"SCHIWIG Immobilien","description":"Ihr persönlicher Immobilienmakler in Zwickau","url":"https://schiwig-immobilien.de","telephone":"+4915735792768","email":"lukasschiwig@gmail.com","address":{"@type":"PostalAddress","streetAddress":"Bruno-Escher-Str. 13","addressLocality":"Lichtentanne","postalCode":"08115","addressCountry":"DE"},"geo":{"@type":"GeoCoordinates","latitude":50.7323,"longitude":12.4960},"openingHours":"Mo-Fr 08:00-18:00","aggregateRating":{"@type":"AggregateRating","ratingValue":"4.6","reviewCount":"37"}}
+</script>
 
 <script>
-gsap.registerPlugin(ScrollTrigger);
+/* ═══════════════════════════════════════════════════
+   SCHIWIG IMMOBILIEN — Index Slide Engine
+═══════════════════════════════════════════════════ */
 
-/* ── LOADER ─────────────────────────────── */
-const loaderFill = document.getElementById('loader-fill');
-const loaderPct  = document.getElementById('loader-pct');
-const loader     = document.getElementById('loader');
+const TOTAL = 6;
+let current = 0;
+let animating = false;
+const DURATION = 0.9;
+const EASE = 'power3.inOut';
+const animated = new Set();
 
-gsap.to(loaderFill, {
-  width: '100%',
-  duration: 1.6,
-  ease: 'power2.inOut',
-  onUpdate() {
-    const pct = Math.round(this.ratio * 100);
-    loaderPct.textContent = pct + '%';
-  },
-  onComplete() {
-    gsap.to(loader, {
-      yPercent: -100,
-      duration: 0.9,
-      ease: 'power4.inOut',
-      onComplete() {
-        loader.style.display = 'none';
+// Panel light/dark config
+const panelDark = [true, true, false, false, false, false]; // true = dark panel
+
+/* ─── Slide positions ─── */
+function positionSlides() {
+  const slides = document.querySelectorAll('.slide');
+  slides.forEach((s, i) => {
+    gsap.set(s, { yPercent: i === 0 ? 0 : 100 });
+  });
+}
+
+/* ─── Go to slide ─── */
+function goTo(index, dir) {
+  if (animating || index === current || index < 0 || index >= TOTAL) return;
+  animating = true;
+
+  const slides = document.querySelectorAll('.slide');
+  const from = slides[current];
+  const to = slides[index];
+  const direction = index > current ? 1 : -1;
+
+  gsap.set(to, { yPercent: direction * 100 });
+  const tl = gsap.timeline({
+    onComplete: () => {
+      gsap.set(from, { yPercent: -direction * 100 });
+      current = index;
+      animating = false;
+      updateUI();
+      if (!animated.has(index)) {
+        animated.add(index);
+        animatePanel(index);
+      }
+    }
+  });
+  tl.to(from, { yPercent: -direction * 100, duration: DURATION, ease: EASE }, 0);
+  tl.to(to, { yPercent: 0, duration: DURATION, ease: EASE }, 0);
+}
+
+/* ─── Update UI (dots, counter, nav) ─── */
+function updateUI() {
+  // Dots
+  document.querySelectorAll('.sd').forEach((d, i) => {
+    d.classList.toggle('active', i === current);
+    d.classList.toggle('sd-dark', panelDark[current]);
+  });
+
+  // Counter
+  const pc = document.getElementById('pcCurrent');
+  if (pc) pc.textContent = String(current + 1).padStart(2, '0');
+  const counter = document.getElementById('panel-counter');
+  if (counter) {
+    counter.classList.toggle('pc-dark', !panelDark[current]);
+  }
+
+  // Progress bar
+  const prog = document.getElementById('progress');
+  if (prog) gsap.to(prog, { scaleX: (current + 1) / TOTAL, duration: 0.5, ease: 'power2.out' });
+}
+
+/* ─── Per-panel enter animations ─── */
+function animatePanel(index) {
+  if (index === 1) {
+    // Hero bento clip-path reveal stagger
+    gsap.fromTo('.hbc', {
+      clipPath: 'inset(0 0 100% 0)',
+      opacity: 0
+    }, {
+      clipPath: 'inset(0 0 0% 0)',
+      opacity: 1,
+      duration: 0.7,
+      stagger: 0.07,
+      ease: 'power3.out'
+    });
+  } else if (index === 2) {
+    // Portrait scale + text from right
+    gsap.fromTo('.lukas-portrait-wrap', { scale: 1.08, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.9, ease: 'power3.out' });
+    gsap.fromTo('.lukas-text > *', { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, stagger: 0.08, ease: 'power3.out', delay: 0.15 });
+  } else if (index === 3) {
+    // Header from left, cards reveal
+    gsap.fromTo('.port-header > *', { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, stagger: 0.1, ease: 'power3.out' });
+    gsap.fromTo('.por-card', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.06, ease: 'power3.out', delay: 0.2 });
+    startInfiniteSlider();
+  } else if (index === 4) {
+    // Columns from below stagger
+    gsap.fromTo('.rechner-inner > *', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'power3.out' });
+  } else if (index === 5) {
+    // Left/right split reveal
+    gsap.fromTo('.kontakt-inner > *:first-child', { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, ease: 'power3.out' });
+    gsap.fromTo('.kontakt-inner > *:last-child', { x: 50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, ease: 'power3.out' });
+  }
+}
+
+/* ─── Infinite slider ─── */
+let sliderRAF;
+let sliderX = 0;
+let isDragging = false;
+let dragStart = 0;
+let dragDelta = 0;
+
+function startInfiniteSlider() {
+  const track = document.getElementById('infTrack');
+  if (!track) return;
+
+  // Clone cards for infinite loop
+  const cards = [...track.children];
+  cards.forEach(c => track.appendChild(c.cloneNode(true)));
+
+  const cardW = 280 + 22; // width + gap
+  const totalW = cards.length * cardW;
+
+  function animate() {
+    if (!isDragging) sliderX -= 0.6;
+    if (sliderX <= -totalW) sliderX += totalW;
+    gsap.set(track, { x: sliderX });
+    sliderRAF = requestAnimationFrame(animate);
+  }
+  animate();
+
+  // Drag support
+  const wrap = document.getElementById('infWrap');
+  wrap.addEventListener('pointerdown', e => {
+    isDragging = true;
+    dragStart = e.clientX - sliderX;
+    wrap.setPointerCapture(e.pointerId);
+  });
+  wrap.addEventListener('pointermove', e => {
+    if (!isDragging) return;
+    sliderX = e.clientX - dragStart;
+  });
+  wrap.addEventListener('pointerup', () => { isDragging = false; });
+  wrap.addEventListener('pointercancel', () => { isDragging = false; });
+}
+
+/* ─── Wertrechner ─── */
+function calcValue() {
+  const type = document.querySelector('.rcl-pill.active')?.dataset.type || 'haus';
+  const area = parseInt(document.getElementById('areaSlider')?.value || 120);
+  const year = document.querySelector('.rcl-year.active')?.dataset.year || 'alt';
+  const cond = document.querySelector('.rcl-cond.active')?.dataset.cond || 'gepflegt';
+
+  const base = { haus: 1350, wohnung: 1180, mfh: 1050, grundstueck: 180 };
+  const yearMult = { alt: 0.8, mid: 0.9, neu: 1.0, modern: 1.15 };
+  const condMult = { renovierungsbedarf: 0.82, gepflegt: 1.0, modernisiert: 1.1, neubau: 1.22 };
+
+  const pricePerSqm = base[type] * yearMult[year] * condMult[cond];
+  const value = Math.round(pricePerSqm * area / 1000) * 1000;
+  const low = Math.round(value * 0.92 / 1000) * 1000;
+  const high = Math.round(value * 1.09 / 1000) * 1000;
+
+  const fmt = v => v.toLocaleString('de-DE') + ' €';
+
+  const valEl = document.getElementById('rrValue');
+  const rangeEl = document.getElementById('rrRange');
+  if (valEl) {
+    gsap.to({ val: parseFloat(valEl.textContent.replace(/[^0-9]/g,'')) || value }, {
+      val: value,
+      duration: 0.6,
+      ease: 'power2.out',
+      onUpdate: function() {
+        valEl.textContent = fmt(Math.round(this.targets()[0].val / 1000) * 1000);
+      }
+    });
+  }
+  if (rangeEl) rangeEl.textContent = `Bandbreite: ${fmt(low)} – ${fmt(high)}`;
+}
+
+/* ─── Input handlers ─── */
+function setupRechner() {
+  document.querySelectorAll('.rcl-pill').forEach(p => p.addEventListener('click', () => {
+    document.querySelectorAll('.rcl-pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    calcValue();
+  }));
+  document.querySelectorAll('.rcl-year').forEach(p => p.addEventListener('click', () => {
+    document.querySelectorAll('.rcl-year').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    calcValue();
+  }));
+  document.querySelectorAll('.rcl-cond').forEach(p => p.addEventListener('click', () => {
+    document.querySelectorAll('.rcl-cond').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    calcValue();
+  }));
+  const slider = document.getElementById('areaSlider');
+  if (slider) {
+    slider.addEventListener('input', () => {
+      const ro = document.getElementById('areaReadout');
+      if (ro) ro.textContent = slider.value + ' m²';
+      calcValue();
+    });
+  }
+}
+
+/* ─── Build side dots ─── */
+function buildDots() {
+  const container = document.getElementById('side-dots');
+  if (!container) return;
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'sd' + (i === 0 ? ' active sd-dark' : ' sd-dark');
+    d.addEventListener('click', () => goTo(i));
+    container.appendChild(d);
+  }
+}
+
+/* ─── Wheel & Touch ─── */
+let wheelTimeout;
+let touchStartY = 0;
+
+function handleWheel(e) {
+  const slide = document.querySelectorAll('.slide')[current];
+  if (slide && slide.classList.contains('scrollable')) {
+    const atTop = slide.scrollTop === 0;
+    const atBottom = slide.scrollTop + slide.clientHeight >= slide.scrollHeight - 2;
+    if (e.deltaY < 0 && !atTop) return;
+    if (e.deltaY > 0 && !atBottom) return;
+  }
+  clearTimeout(wheelTimeout);
+  wheelTimeout = setTimeout(() => {
+    if (e.deltaY > 0) goTo(current + 1);
+    else goTo(current - 1);
+  }, 40);
+}
+
+function handleTouchStart(e) { touchStartY = e.touches[0].clientY; }
+function handleTouchEnd(e) {
+  const diff = touchStartY - e.changedTouches[0].clientY;
+  if (Math.abs(diff) > 40) {
+    if (diff > 0) goTo(current + 1);
+    else goTo(current - 1);
+  }
+}
+
+/* ─── Keyboard ─── */
+function handleKey(e) {
+  if (e.key === 'ArrowDown' || e.key === 'PageDown') goTo(current + 1);
+  if (e.key === 'ArrowUp' || e.key === 'PageUp') goTo(current - 1);
+}
+
+/* ─── Nav data-slide ─── */
+function setupNavLinks() {
+  document.querySelectorAll('[data-slide]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      goTo(parseInt(el.dataset.slide));
+    });
+  });
+}
+
+/* ─── Hamburger ─── */
+function closeMob() {
+  document.getElementById('navMob')?.classList.remove('open');
+}
+document.getElementById('hamburger')?.addEventListener('click', () => {
+  document.getElementById('navMob')?.classList.toggle('open');
+});
+
+/* ─── Cookie ─── */
+function acceptCookie() {
+  localStorage.setItem('cookie', '1');
+  gsap.to('#cookieBanner', { opacity: 0, y: 20, duration: 0.4, onComplete: () => {
+    document.getElementById('cookieBanner')?.classList.remove('show');
+  }});
+}
+function declineCookie() { acceptCookie(); }
+
+/* ─── LOADER & INIT ─── */
+function initPage() {
+  positionSlides();
+  buildDots();
+  setupNavLinks();
+  setupRechner();
+
+  // Bind inputs
+  window.addEventListener('wheel', handleWheel, { passive: false });
+  window.addEventListener('touchstart', handleTouchStart, { passive: true });
+  window.addEventListener('touchend', handleTouchEnd, { passive: true });
+  window.addEventListener('keydown', handleKey);
+
+  // Nav in
+  gsap.to('#mainNav', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out', delay: 0.2 });
+  gsap.to('#side-dots', { opacity: 1, duration: 0.6, delay: 0.4 });
+  gsap.to('#panel-counter', { opacity: 1, duration: 0.6, delay: 0.5 });
+  gsap.to('.wa-float', { opacity: 1, scale: 1, duration: 0.5, delay: 0.8 });
+
+  // Panel 0 reveal anim
+  gsap.to('.rl', { y: 0, opacity: 1, duration: 0.8, stagger: 0.07, ease: 'power3.out', delay: 0.1 });
+  gsap.to('#revealSub', { opacity: 1, y: 0, duration: 0.6, delay: 0.8 });
+  gsap.to('#revealLine', { width: 140, duration: 0.8, delay: 1.0, ease: 'power2.out' });
+
+  // Cookie
+  if (!localStorage.getItem('cookie')) {
+    setTimeout(() => {
+      const cb = document.getElementById('cookieBanner');
+      if (cb) {
+        cb.classList.add('show');
+        gsap.to(cb, { opacity: 1, y: 0, duration: 0.5 });
+      }
+    }, 2500);
+  }
+
+  animated.add(0);
+  updateUI();
+}
+
+window.addEventListener('load', () => {
+  const letters = document.querySelectorAll('#loader .ll');
+  const fill = document.getElementById('loader-fill');
+  const pct = document.getElementById('loaderPct');
+
+  gsap.set(letters, { y: 40, opacity: 0 });
+  gsap.to(letters, { y: 0, opacity: 1, duration: 0.6, stagger: 0.07, ease: 'power3.out' });
+  gsap.to(fill, {
+    width: '100%',
+    duration: 1.4,
+    ease: 'power2.inOut',
+    onUpdate: function() {
+      if (pct) pct.textContent = Math.round(this.progress() * 100) + '%';
+    }
+  });
+
+  setTimeout(() => {
+    gsap.to('#loader', {
+      opacity: 0,
+      duration: 0.5,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        document.getElementById('loader').style.display = 'none';
         initPage();
       }
     });
-  }
+  }, 1800);
 });
-
-/* ── INIT ───────────────────────────────── */
-function initPage() {
-
-  // Scroll progress bar
-  const prog = document.getElementById('progress');
-  window.addEventListener('scroll', () => {
-    const max = document.body.scrollHeight - window.innerHeight;
-    prog.style.transform = 'scaleX(' + (window.scrollY / max) + ')';
-  }, { passive: true });
-
-  // ── HERO BENTO REVEAL — scroll-pinned, card by card ────────────────
-  const heroCds = Array.from(document.querySelectorAll('.hbc'));
-  const heroSection = document.querySelector('.hero-bento');
-
-  // All cards start hidden
-  gsap.set(heroCds, { clipPath: 'inset(8% 8% 8% 8% round 18px)', scale: 0.82, opacity: 0 });
-
-  // Build a pinned timeline: 6 cards × 130px scroll each = 780px total pin
-  const heroTL = gsap.timeline({
-    scrollTrigger: {
-      trigger: heroSection,
-      start: 'top top',
-      end: '+=780',
-      pin: true,
-      scrub: 0.8,
-      anticipatePin: 1,
-    }
-  });
-
-  heroCds.forEach((card, i) => {
-    heroTL.to(card, {
-      clipPath: 'inset(0% 0% 0% 0% round 18px)',
-      scale: 1,
-      opacity: 1,
-      duration: 0.22,
-      ease: 'power2.out',
-    }, i * 0.14);
-  });
-
-  // ── PORTFOLIO CAROUSEL ────────────────
-  const carTrack  = document.getElementById('carTrack');
-  const carDots   = document.getElementById('carDots');
-  const carPrev   = document.getElementById('carPrev');
-  const carNext   = document.getElementById('carNext');
-  if (carTrack) {
-    const cards = Array.from(carTrack.querySelectorAll('.por-card'));
-    const cardW = () => cards[0].offsetWidth + 24; // width + gap
-    let cur = 0;
-
-    // Build dots
-    cards.forEach((_, i) => {
-      const d = document.createElement('div');
-      d.className = 'car-dot' + (i === 0 ? ' active' : '');
-      d.addEventListener('click', () => goTo(i));
-      carDots.appendChild(d);
-    });
-
-    function updateDots() {
-      carDots.querySelectorAll('.car-dot').forEach((d, i) => {
-        d.classList.toggle('active', i === cur);
-      });
-    }
-
-    function goTo(idx) {
-      cur = Math.max(0, Math.min(idx, cards.length - 1));
-      gsap.to(carTrack, { x: -(cur * cardW()), duration: 0.9, ease: 'expo.out' });
-      updateDots();
-    }
-
-    carNext.addEventListener('click', () => goTo(cur + 1));
-    carPrev.addEventListener('click', () => goTo(cur - 1));
-
-    // Auto-advance
-    let autoTimer = setInterval(() => goTo(cur + 1 < cards.length ? cur + 1 : 0), 4000);
-    carTrack.addEventListener('mouseenter', () => clearInterval(autoTimer));
-    carTrack.addEventListener('mouseleave', () => {
-      autoTimer = setInterval(() => goTo(cur + 1 < cards.length ? cur + 1 : 0), 4000);
-    });
-
-    // Drag support
-    let startX = 0, isDragging = false;
-    carTrack.addEventListener('mousedown', e => { startX = e.clientX; isDragging = true; });
-    window.addEventListener('mouseup', e => {
-      if (!isDragging) return;
-      isDragging = false;
-      const diff = startX - e.clientX;
-      if (Math.abs(diff) > 50) goTo(diff > 0 ? cur + 1 : cur - 1);
-    });
-    carTrack.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
-    carTrack.addEventListener('touchend', e => {
-      const diff = startX - e.changedTouches[0].clientX;
-      if (Math.abs(diff) > 40) goTo(diff > 0 ? cur + 1 : cur - 1);
-    });
-
-    // Refresh on resize
-    window.addEventListener('resize', () => {
-      gsap.set(carTrack, { x: -(cur * cardW()) });
-    });
-  }
-
-  // ── SCROLL REVEALS (.rv) ──────────────
-  ScrollTrigger.batch('.rv', {
-    interval: 0.12,
-    batchMax: 3,
-    onEnter: els =>
-      gsap.from(els, {
-        opacity: 0, y: 36,
-        duration: 1.2, ease: 'expo.out',
-        stagger: 0.12
-      }),
-    start: 'top 90%'
-  });
-
-  // ── COUNTERS ──────────────────────────
-  document.querySelectorAll('.counter').forEach(el => {
-    const target = parseInt(el.dataset.target);
-    const obj = { v: 0 };
-    gsap.to(obj, {
-      v: target,
-      duration: 2.4,
-      ease: 'power2.out',
-      scrollTrigger: { trigger: el, start: 'top 82%' },
-      onUpdate() { el.textContent = Math.round(obj.v); }
-    });
-  });
-
-  // ── HORIZONTAL SCROLL (listings) ──────
-  const track = document.getElementById('listings-track');
-  const section = document.getElementById('listings-section');
-  if (window.innerWidth > 768 && track) {
-    gsap.to(track, {
-      x: () => -(track.scrollWidth - window.innerWidth) + 112,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: () => '+=' + (track.scrollWidth - window.innerWidth + 112),
-        scrub: 2,
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true
-      }
-    });
-  }
-
-  // ── IMAGE CURTAIN (Über Lukas) ─────────
-  gsap.to('#aboutCover', {
-    scaleY: 0,
-    transformOrigin: 'bottom',
-    duration: 1.4,
-    ease: 'power4.inOut',
-    scrollTrigger: {
-      trigger: '.about',
-      start: 'top 70%'
-    }
-  });
-
-  // ── TESTIMONIALS MARQUEE ───────────────
-  const ttrack = document.getElementById('testiTrack');
-  if (ttrack) {
-    ttrack.innerHTML += ttrack.innerHTML;
-    const tw = ttrack.scrollWidth / 2;
-    gsap.to(ttrack, { x: -tw, duration: 35, ease: 'none', repeat: -1 });
-  }
-
-  // ── NAV HIDE ON SCROLL ─────────────────
-  let lastY = 0;
-  ScrollTrigger.create({
-    onUpdate: self => {
-      const y = self.scroll();
-      gsap.to('#mainNav', {
-        y: y > lastY && y > 120 ? -90 : 0,
-        duration: 0.7,
-        ease: 'expo.out'
-      });
-      lastY = y;
-    }
-  });
-
-  // ── MAGNETIC BUTTONS (desktop only) ───
-  gsap.matchMedia().add('(min-width: 769px)', () => {
-    document.querySelectorAll('.magnetic').forEach(btn => {
-      btn.addEventListener('mousemove', e => {
-        const r = btn.getBoundingClientRect();
-        const x = e.clientX - r.left - r.width / 2;
-        const y = e.clientY - r.top - r.height / 2;
-        gsap.to(btn, { x: x * 0.16, y: y * 0.16, duration: 0.5, ease: 'power2.out' });
-      });
-      btn.addEventListener('mouseleave', () => {
-        gsap.to(btn, { x: 0, y: 0, duration: 1.0, ease: 'elastic.out(1, 0.5)' });
-      });
-    });
-  });
-
-  // Refresh after images load
-  window.addEventListener('load', () => ScrollTrigger.refresh());
-
-  // ── BENTO REVEALS ────────────────────
-  gsap.utils.toArray('.bento-grid').forEach(grid => {
-    const cards = Array.from(grid.children);
-    gsap.set(cards, { opacity: 0, scale: 0.88, y: 22 });
-    ScrollTrigger.create({
-      trigger: grid,
-      start: 'top 82%',
-      once: true,
-      onEnter: () => {
-        gsap.to(cards, {
-          opacity: 1, scale: 1, y: 0,
-          duration: 0.72, ease: 'expo.out',
-          stagger: 0.07,
-          clearProps: 'scale,y'
-        });
-      }
-    });
-  });
-
-  // ── BENTO COUNTERS ────────────────────
-  document.querySelectorAll('.bc-counter').forEach(el => {
-    const target = parseInt(el.dataset.target);
-    const obj = { v: 0 };
-    gsap.to(obj, {
-      v: target, duration: 1.8, ease: 'power3.out',
-      scrollTrigger: { trigger: el, start: 'top 85%' },
-      onUpdate() { el.textContent = Math.round(obj.v); }
-    });
-  });
-
-  // ── COOKIE BANNER ─────────────────────
-  const cookieBanner = document.getElementById('cookieBanner');
-  if (cookieBanner && !localStorage.getItem('cookie_consent')) {
-    setTimeout(() => {
-      gsap.to(cookieBanner, { opacity: 1, y: 0, duration: 0.7, ease: 'expo.out' });
-    }, 3200);
-  }
-  document.getElementById('cookieAccept')?.addEventListener('click', () => {
-    localStorage.setItem('cookie_consent', 'accepted');
-    gsap.to(cookieBanner, { opacity: 0, y: 16, duration: 0.4, ease: 'power2.in',
-      onComplete: () => { cookieBanner.style.display = 'none'; } });
-  });
-  document.getElementById('cookieDecline')?.addEventListener('click', () => {
-    localStorage.setItem('cookie_consent', 'declined');
-    gsap.to(cookieBanner, { opacity: 0, y: 16, duration: 0.4, ease: 'power2.in',
-      onComplete: () => { cookieBanner.style.display = 'none'; } });
-  });
-
-  // ── FAQ ACCORDION ─────────────────────
-  document.querySelectorAll('.faq-q').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const item   = btn.closest('.faq-item');
-      const answer = item.querySelector('.faq-a');
-      const isOpen = item.classList.contains('open');
-
-      // close all open items
-      document.querySelectorAll('.faq-item.open').forEach(openItem => {
-        openItem.classList.remove('open');
-        gsap.to(openItem.querySelector('.faq-a'), { height: 0, duration: 0.38, ease: 'power3.inOut' });
-      });
-
-      if (!isOpen) {
-        item.classList.add('open');
-        gsap.set(answer, { height: 'auto' });
-        const h = answer.offsetHeight;
-        gsap.fromTo(answer, { height: 0 }, { height: h, duration: 0.52, ease: 'expo.out' });
-      }
-    });
-  });
-
-  // ── WERTRECHNER ───────────────────────
-  const BASE_M2 = { wohnung: 1100, haus: 1400, mehrfamilien: 900, gewerbe: 800 };
-  const YEAR_M  = { new: 1.25, mid: 1.0, old: 0.82, veryold: 0.68 };
-
-  let rcTypeVal = 'wohnung', rcYearVal = 'mid', rcCondVal = 1.0, rcAreaNum = 120;
-
-  function calcWert() {
-    const base = BASE_M2[rcTypeVal] || 1100;
-    const yM   = YEAR_M[rcYearVal]  || 1.0;
-    const val  = Math.round(base * rcAreaNum * yM * rcCondVal / 1000) * 1000;
-    const lo   = Math.round(val * 0.88 / 1000) * 1000;
-    const hi   = Math.round(val * 1.12 / 1000) * 1000;
-    const fmt  = n => n.toLocaleString('de-DE') + '\u00a0€';
-    const valEl   = document.getElementById('rrValue');
-    const rangeEl = document.getElementById('rrRange');
-    if (valEl) {
-      const prev = parseInt(valEl.textContent.replace(/\D/g,'')) || 0;
-      const obj  = { v: prev };
-      gsap.to(obj, { v: val, duration: 0.7, ease: 'power2.out',
-        onUpdate() { valEl.textContent = fmt(Math.round(obj.v / 1000) * 1000); }
-      });
-    }
-    if (rangeEl) rangeEl.textContent = 'Spanne: ' + fmt(lo) + ' – ' + fmt(hi);
-  }
-
-  document.querySelectorAll('#rcType .rcl-pill').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#rcType .rcl-pill').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      rcTypeVal = btn.dataset.val;
-      calcWert();
-    });
-  });
-
-  const rcAreaSlider = document.getElementById('rcArea');
-  const rcAreaLabel  = document.getElementById('rcAreaVal');
-  if (rcAreaSlider) {
-    rcAreaSlider.addEventListener('input', () => {
-      rcAreaNum = parseInt(rcAreaSlider.value);
-      if (rcAreaLabel) rcAreaLabel.textContent = rcAreaNum + ' m²';
-      calcWert();
-    });
-  }
-
-  const rcYearSel = document.getElementById('rcYear');
-  if (rcYearSel) {
-    rcYearSel.addEventListener('change', () => { rcYearVal = rcYearSel.value; calcWert(); });
-  }
-
-  document.querySelectorAll('#rcCond .rcl-cond').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#rcCond .rcl-cond').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      rcCondVal = parseFloat(btn.dataset.val);
-      calcWert();
-    });
-  });
-}
-
-/* ── MOBILE NAV ─────────────────────────── */
-document.getElementById('hamburger').addEventListener('click', () => {
-  document.getElementById('navMob').classList.toggle('open');
-});
-function closeMob() {
-  document.getElementById('navMob').classList.remove('open');
-}
 </script>
-
-<!-- Schema.org -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "RealEstateAgent",
-  "name": "SCHIWIG Immobilien",
-  "description": "Immobilienmakler in Zwickau — Kaufen, Verkaufen, Vermieten und Bewertung.",
-  "url": "https://bochmann-dienstleistungen.github.io/schiwig-immo-demo/",
-  "telephone": "+4915735792768",
-  "email": "lukasschiwig@gmail.com",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "Bruno-Escher-Str. 13",
-    "addressLocality": "Lichtentanne",
-    "postalCode": "08115",
-    "addressCountry": "DE"
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.6",
-    "reviewCount": "37"
-  }
-}
-</script>
-
 </body>
 </html>
