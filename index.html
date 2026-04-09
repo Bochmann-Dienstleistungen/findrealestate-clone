@@ -313,6 +313,10 @@ nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:500;widt
   .form-grid{grid-template-columns:1fr}
 }
 
+/* ── KONTAKT MAP ──────────────────────── */
+.kontakt-map{max-width:1200px;margin:32px auto 0;width:100%;border-radius:14px;overflow:hidden;border:1px solid var(--line);height:240px;opacity:0;transform:translateY(24px)}
+.kontakt-map iframe{width:100%;height:100%;border:0;display:block;filter:saturate(.9) brightness(.98)}
+
 /* ── WAAPP FLOAT ──────────────────────── */
 .wa-float{position:fixed;bottom:28px;right:28px;z-index:800;width:56px;height:56px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(37,211,102,.35);transition:transform .3s,box-shadow .3s;animation:wapulse 3s ease-in-out infinite}
 .wa-float:hover{transform:scale(1.1);box-shadow:0 12px 40px rgba(37,211,102,.5);animation:none}
@@ -350,6 +354,21 @@ nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:500;widt
 /* ── PROGRESS BAR ─────────────────────── */
 #prog-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:600;background:rgba(26,63,143,.08)}
 #prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold3));transform-origin:left;transform:scaleX(0.1667);transition:transform .65s cubic-bezier(.4,0,.2,1)}
+
+/* ── DOT GRID — light panels ─────────── */
+#slide-lukas::before,
+#slide-portfolio::before,
+#slide-rechner::before,
+#slide-kontakt::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(rgba(26,63,143,.045) 1px,transparent 1px);
+  background-size:30px 30px;
+  pointer-events:none;z-index:0
+}
+#slide-lukas > *,
+#slide-portfolio > *,
+#slide-rechner > *,
+#slide-kontakt > *{position:relative;z-index:1}
 
 /* ── LINE MASK REVEAL ─────────────────── */
 .lw{display:block;overflow:hidden;padding-bottom:.05em}
@@ -393,8 +412,8 @@ nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:500;widt
     <li><a href="leistungen.html">Leistungen</a></li>
     <li><a href="referenzen.html">Referenzen</a></li>
     <li><a href="objekte.html">Objekte</a></li>
-    <li><a href="ueber.html">Über uns</a></li>
-    <li><a href="#" data-slide="5">Kontakt</a></li>
+    <li><a href="ueber.html" target="_self">Über uns</a></li>
+    <li><a href="javascript:void(0)" data-slide="5">Kontakt</a></li>
   </ul>
   <a href="tel:+4915735792768" class="nav-cta">Jetzt anrufen</a>
   <button class="nav-ham" id="hamburger" aria-label="Menü">
@@ -407,8 +426,8 @@ nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:500;widt
   <a href="leistungen.html" onclick="closeMob()">Leistungen</a>
   <a href="referenzen.html" onclick="closeMob()">Referenzen</a>
   <a href="objekte.html" onclick="closeMob()">Objekte</a>
-  <a href="ueber.html" onclick="closeMob()">Über uns</a>
-  <a href="#" data-slide="5" onclick="closeMob()">Kontakt</a>
+  <a href="ueber.html">Über uns</a>
+  <a href="javascript:void(0)" data-slide="5" onclick="closeMob()">Kontakt</a>
   <a href="tel:+4915735792768" onclick="closeMob()" style="color:var(--gold)">☎ 0157 3579 2768</a>
 </div>
 
@@ -480,7 +499,7 @@ nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:500;widt
         </div>
         <div class="hbc hbc-cta">
           <p class="hbc-sub">Persönlicher Einsatz.<br>Digitale Vermarktung.<br>Echte Ergebnisse.</p>
-          <a href="#" data-slide="5" class="hbc-btn">Kostenlos bewerten →</a>
+          <a href="javascript:void(0)" data-slide="5" class="hbc-btn">Kostenlos bewerten →</a>
         </div>
         <div class="hbc hbc-loc">
           <span class="hbc-loc-eyebrow">Standort</span>
@@ -685,7 +704,7 @@ nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:500;widt
           <div class="rr-range" id="rrRange">Bandbreite: 178.000 – 208.000 €</div>
           <div class="rr-divider"></div>
           <p class="rr-note">Diese Schätzung basiert auf aktuellen Marktdaten für die Region Zwickau. Für eine präzise Bewertung empfehle ich ein persönliches Gespräch.</p>
-          <a href="#" data-slide="5" class="btn-gold rr-cta">Jetzt kostenlos bewerten</a>
+          <a href="javascript:void(0)" data-slide="5" class="btn-gold rr-cta">Jetzt kostenlos bewerten</a>
         </div>
         <p style="font-size:.66rem;color:var(--muted);margin-top:14px;text-align:center;font-weight:300">Unverbindliche Schätzung · Kostenlose Präzisionsbewertung auf Anfrage</p>
       </div>
@@ -693,7 +712,7 @@ nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:500;widt
   </div>
 
   <!-- ═══ PANEL 5 — KONTAKT ═══ -->
-  <div class="slide" id="slide-kontakt">
+  <div class="slide scrollable" id="slide-kontakt">
     <div class="kontakt-inner">
       <div>
         <span class="section-eyebrow">Kontakt</span>
@@ -774,6 +793,13 @@ nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:500;widt
         <a href="impressum.html">Impressum</a>
         <a href="datenschutz.html">Datenschutz</a>
       </div>
+    </div>
+    <div class="kontakt-map" id="kontaktMap">
+      <iframe
+        src="https://www.openstreetmap.org/export/embed.html?bbox=12.440%2C50.720%2C12.530%2C50.760&amp;layer=mapnik&amp;marker=50.7380%2C12.4860"
+        loading="lazy"
+        title="SCHIWIG Immobilien Standort"
+        allowfullscreen></iframe>
     </div>
   </div>
 
@@ -948,6 +974,7 @@ function animatePanel(index) {
   } else if (index === 5) {
     gsap.to('.kontakt-inner > *:first-child > *', { y: 0, opacity: 1, stagger: 0.08, duration: 0.55, ease: 'power3.out' });
     gsap.to('.kontakt-inner > *:last-child',       { y: 0, opacity: 1, duration: 0.65, delay: 0.18, ease: 'power3.out' });
+    gsap.to('#kontaktMap', { opacity: 1, y: 0, duration: 0.75, delay: 0.45, ease: 'power3.out' });
   }
 }
 
