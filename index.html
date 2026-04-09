@@ -10,7 +10,10 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&dpr=1">
+<link rel="preload" as="image" href="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=1400">
+<link rel="preload" as="image" href="./lukas portrait groß .jpeg">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <style>
 :root{
@@ -460,7 +463,7 @@ nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:500;widt
           </div>
         </div>
         <div class="hbc hbc-mainimg">
-          <img src="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Immobilien Zwickau">
+          <img src="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Immobilien Zwickau" fetchpriority="high">
           <div class="hbc-grad"></div>
           <div class="hbc-tag">Zwickau &amp; Region</div>
         </div>
@@ -545,7 +548,7 @@ nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:500;widt
       <div class="inf-track" id="infTrack">
         <div class="por-card">
           <div class="por-img-wrap">
-            <img class="por-img" src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=900" alt="EFH Marienthal">
+            <img class="por-img" src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=900" alt="EFH Marienthal" loading="lazy">
             <span class="por-badge sold">Verkauft</span>
             <span class="por-days">In 11 Tagen</span>
           </div>
@@ -561,7 +564,7 @@ nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:500;widt
         </div>
         <div class="por-card">
           <div class="por-img-wrap">
-            <img class="por-img" src="https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=900" alt="3-Zi Wohnung Innenstadt">
+            <img class="por-img" src="https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=900" alt="3-Zi Wohnung Innenstadt" loading="lazy">
             <span class="por-badge rented">Vermietet</span>
             <span class="por-days">In 5 Tagen</span>
           </div>
@@ -577,7 +580,7 @@ nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:500;widt
         </div>
         <div class="por-card">
           <div class="por-img-wrap">
-            <img class="por-img" src="https://images.pexels.com/photos/164338/pexels-photo-164338.jpeg?auto=compress&cs=tinysrgb&w=900" alt="MFH Lichtentanne">
+            <img class="por-img" src="https://images.pexels.com/photos/164338/pexels-photo-164338.jpeg?auto=compress&cs=tinysrgb&w=900" alt="MFH Lichtentanne" loading="lazy">
             <span class="por-badge sold">Verkauft</span>
             <span class="por-days">In 18 Tagen</span>
           </div>
@@ -593,7 +596,7 @@ nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:500;widt
         </div>
         <div class="por-card">
           <div class="por-img-wrap">
-            <img class="por-img" src="https://images.pexels.com/photos/2121121/pexels-photo-2121121.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Penthouse Eckersbach">
+            <img class="por-img" src="https://images.pexels.com/photos/2121121/pexels-photo-2121121.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Penthouse Eckersbach" loading="lazy">
             <span class="por-badge rented">Vermietet</span>
             <span class="por-days">In 3 Tagen</span>
           </div>
@@ -609,7 +612,7 @@ nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:500;widt
         </div>
         <div class="por-card">
           <div class="por-img-wrap">
-            <img class="por-img" src="https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Haus mit Garten Werdau">
+            <img class="por-img" src="https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Haus mit Garten Werdau" loading="lazy">
             <span class="por-badge sold">Verkauft</span>
             <span class="por-days">In 9 Tagen</span>
           </div>
@@ -625,7 +628,7 @@ nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:500;widt
         </div>
         <div class="por-card">
           <div class="por-img-wrap">
-            <img class="por-img" src="https://images.pexels.com/photos/1571463/pexels-photo-1571463.jpeg?auto=compress&cs=tinysrgb&w=900" alt="4-Zi Wohnung Planitz">
+            <img class="por-img" src="https://images.pexels.com/photos/1571463/pexels-photo-1571463.jpeg?auto=compress&cs=tinysrgb&w=900" alt="4-Zi Wohnung Planitz" loading="lazy">
             <span class="por-badge active">Aktiv</span>
           </div>
           <div class="por-body">
@@ -810,7 +813,7 @@ const TOTAL = 6;
 let current = 0;
 let animating = false;
 let cooldown = false;
-const DURATION = 0.72;
+const DURATION = 0.82;
 const EASE = 'power3.inOut';
 const animated = new Set();
 
