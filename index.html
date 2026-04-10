@@ -215,7 +215,16 @@ function draw(i) {
 function showText() { txts.forEach(el => el && el.classList.add('visible')); }
 function hideText() { txts.forEach(el => el && el.classList.remove('visible')); }
 
-// Preload: first 10 frames immediately, rest in background
+function finish() {
+  ready = true;
+  loader.classList.add('done');
+  draw(0);
+  showText();
+}
+
+// Safety fallback: dismiss loader after 10s no matter what
+const loaderTimeout = setTimeout(finish, 10000);
+
 urls.forEach((url, i) => {
   const img = new Image();
   img.onload = () => {
@@ -223,19 +232,16 @@ urls.forEach((url, i) => {
     loaded++;
     fill.style.width = Math.round(loaded / TOTAL_FRAMES * 100) + '%';
     if (loaded === TOTAL_FRAMES) {
-      ready = true;
-      setTimeout(() => {
-        loader.classList.add('done');
-        draw(0);
-        showText();
-      }, 400);
+      clearTimeout(loaderTimeout);
+      setTimeout(finish, 300);
     }
   };
   img.onerror = () => {
     loaded++;
+    fill.style.width = Math.round(loaded / TOTAL_FRAMES * 100) + '%';
     if (loaded === TOTAL_FRAMES) {
-      ready = true;
-      setTimeout(() => loader.classList.add('done'), 400);
+      clearTimeout(loaderTimeout);
+      setTimeout(finish, 300);
     }
   };
   img.src = url;
